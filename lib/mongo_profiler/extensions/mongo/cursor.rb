@@ -4,7 +4,7 @@ Mongo::Cursor.class_eval do
   def send_initial_query
     beginning_time = Time.now
     original_send_initial_query
-    time_spent = Time.now - beginning_time
+    total_time = Time.now - beginning_time
     begin
       profiler = MongoProfiler::Profiler.new(@db)
 
@@ -12,7 +12,7 @@ Mongo::Cursor.class_eval do
 
       result = {}
 
-      result[:time_spent] = time_spent
+      result[:total_time] = total_time
 
       # the payload sent to mongo
       result[:instrument_payload] = JSON.dump(instrument_payload)
@@ -31,7 +31,7 @@ Mongo::Cursor.class_eval do
       profiler.log(result)
 
       if statsd_client = MongoProfiler.statsd_client
-        statsd_client.populate(_caller, time_spent)
+        statsd_client.populate(_caller, total_time)
       end
     rescue => e
       p "MongoProfiler: #{e.message}"
