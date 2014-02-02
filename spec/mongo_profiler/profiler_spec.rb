@@ -4,8 +4,14 @@ module MongoProfiler
   describe Profiler do
     subject { Profiler.new(DB) }
 
-    describe '.log' do
-      it 'persist group_id'
+    before { MongoProfiler.application_name = 'project' }
+
+    describe '#log' do
+      it 'merges required keys' do
+        expect(subject.collection).to receive(:insert).with({ application_name: MongoProfiler.application_name, group_id: MongoProfiler.group_id})
+
+        subject.log({})
+      end
     end
 
     describe '#should_skip?' do
@@ -52,27 +58,6 @@ module MongoProfiler
     describe '#collection_config' do
       it { expect(subject.collection_config).to be_a(Mongo::Collection) }
       it { expect(subject.collection_config.name).to eq 'mongo_profiler_config' }
-    end
-
-    describe '.populate_stats' do
-      let(:caller_obj) { MongoProfiler::Caller.new(_caller) }
-      let(:_caller) {
-        [
-          "/Users/pablo/workspace/project/spec/mongo_profiler_spec.rb:7:in `new'",
-          "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
-          "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `fetch'",
-          "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block in let'"
-        ]
-      }
-
-      xit 'populates increment and timing' do
-        stat_client = double 'Stats Client'
-
-        expect(stat_client).to receive(:increment).with('mongo_profiler.project.mongo_profiler_spec_rb.new')
-        expect(stat_client).to receive(:timing).with('mongo_profiler.project.mongo_profiler_spec_rb.new', 5000)
-
-        described_class.populate_stats(caller_obj, 5, stat_client)
-      end
     end
   end
 end

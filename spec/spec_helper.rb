@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'pry-byebug'
 
 Bundler.require(:default, :test)
 
@@ -10,10 +11,13 @@ COLL       = DB['example-collection']
 
 Dir['./spec/support/**/*.rb'].each &method(:require)
 
+# creates capped collections
+MongoProfiler::Profiler.new(DB).create_collections
+
 RSpec.configure do |config|
   config.after do
     DB.collections.each do |collection|
-      collection.remove unless collection.name.match(/^system\./)
+      collection.drop unless collection.name.match(/^system\./)
     end
   end
 end

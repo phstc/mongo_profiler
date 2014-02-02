@@ -1,4 +1,4 @@
-# Mongo::Ruby::Profiler
+# MongoProfiler
 
 TODO: Write a gem description
 

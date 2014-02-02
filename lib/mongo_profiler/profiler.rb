@@ -1,6 +1,3 @@
-require "mongo_profiler/caller"
-require "mongo_profiler/extensions/mongo/cursor"
-
 module MongoProfiler
   class Profiler
     def initialize(db)
@@ -8,7 +5,7 @@ module MongoProfiler
     end
 
     def log(document)
-      collection.insert(document.merge(application_name: @application_name, group_id: @group_id))
+      collection.insert(document.merge(application_name: MongoProfiler.application_name, group_id: MongoProfiler.group_id))
     end
 
     def should_skip?(payload)
@@ -17,9 +14,9 @@ module MongoProfiler
       payload = payload.to_h.dup.with_indifferent_access
 
       if !payload['database'].to_s.match(/^admin|system/).nil? ||
-         !payload['collection'].to_s.match(/^mongo_|system/).nil? ||
-         !payload['selector'].to_h['count'].to_s.match(/^mongo_|system/).nil? ||
-         !payload['selector'].to_h['distinct'].to_s.match(/^mongo_|system/).nil?
+        !payload['collection'].to_s.match(/^mongo_|system/).nil? ||
+        !payload['selector'].to_h['count'].to_s.match(/^mongo_|system/).nil? ||
+        !payload['selector'].to_h['distinct'].to_s.match(/^mongo_|system/).nil?
 
         return true
       end
@@ -31,17 +28,6 @@ module MongoProfiler
 
       false
     end
-
-    # def populate_stats(_caller, total_time, stat_client=Augury.statsd)
-    # file   = sanitaze_stat_key _caller.file.split('/').last
-    # method = sanitaze_stat_key _caller.method
-
-    # stat_name     = "mongo_profiler.#{MongoProfiler.application_name}.#{file}.#{method}"
-    # total_time_ms = total_time * 1000
-
-    # stat_client.increment stat_name
-    # stat_client.timing    stat_name, total_time_ms
-    # end
 
     def create_collections
       # http://docs.mongodb.org/manual/core/capped-collections/
@@ -80,13 +66,6 @@ module MongoProfiler
 
     def disabled?
       !enabled?
-    end
-
-
-    private
-
-    def sanitaze_stat_key(key)
-      key.gsub(/\W/, '_')
     end
   end
 end

@@ -29,9 +29,11 @@ Mongo::Cursor.class_eval do
       result[:backtrace]  = _caller._caller
 
       profiler.log(result)
-      # MongoProfiler.populate_stats(_caller, time_spent)
+
+      if statsd_client = MongoProfiler.statsd_client
+        statsd_client.populate(_caller, time_spent)
+      end
     rescue => e
-      binding.pry
       p "MongoProfiler: #{e.message}"
     end
   end
