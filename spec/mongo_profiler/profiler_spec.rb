@@ -4,20 +4,6 @@ module MongoProfiler
   describe Profiler do
     subject { Profiler.new(DB) }
 
-    describe '.extra_attr=' do
-      xit 'set an extra attr' do
-        described_class.extra_attrs['test'] = 'test_value'
-
-        expect(described_class.extra_attrs['test']).to eq 'test_value'
-      end
-    end
-
-    describe '.group_id' do
-      xit 'uses default_attrs keys by default' do
-        expect(described_class.group_id).to eq described_class.default_attrs.values.join('-')
-      end
-    end
-
     describe '.log' do
       it 'persist group_id'
     end

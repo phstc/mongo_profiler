@@ -12,16 +12,16 @@ module MongoProfiler
   class << self
     attr_accessor :extra_attrs, :group_id, :application_name
 
-    def default_attrs
-      { process_pid:       Process.pid,
-        thread_object_id:  Thread.current.object_id }
+    def extra_attrs
+      @extra_attrs ||= {}
     end
 
+    def group_id
+      # The group_id is used to determine the life cycle where the queries ocurred.
+      # For web applications a life cycle can be a request.
+      # So people can filter all Mongo Queries per request based on request#url and/or request#uuid.
+      @group_id ||= { process_pid:       Process.pid,
+                      thread_object_id:  Thread.current.object_id }
+    end
   end
 end
-
-MongoProfiler.extra_attrs ||= MongoProfiler.default_attrs
-# The group_by_keys are used to determine Mongo Queries life cycle.
-# For web applications a life cycle can be a request.
-# So people can filter all Mongo Queries per request based on request#url and/or request#uuid.
-MongoProfiler.group_id ||= MongoProfiler.default_attrs.values.join('-')
