@@ -34,7 +34,7 @@ module MongoProfiler
       # Config database must have only one document
       # 1_048_576 - 1MB
       # db.mongo_profiler_config.drop()
-      # db.createCollection('mongo_profiler_config', { capped: true, size: 1048576, max: 9223372036854775807 })
+      # db.createCollection('mongo_profiler_config', { capped: true, size: 1048576, max: 1 })
       @db.create_collection(COLLECTION_CONFIG_NAME, { capped: true, size: 1_048_576, max: 1 })
 
       @db.create_collection(COLLECTION_PROFILER_NAME, { capped: true, size: 4_001_792, max: 9223372036854775807 })
