@@ -1,7 +1,7 @@
 module MongoProfiler
   class Stats
-    def initialize(statsd_client)
-      @statsd_client = statsd_client
+    def initialize(stats_client)
+      @stats_client = stats_client
     end
 
     def populate(_caller, total_time)
@@ -12,8 +12,8 @@ module MongoProfiler
 
       total_time_ms = total_time * 1000
 
-      @statsd_client.increment stat_name
-      @statsd_client.timing    stat_name, total_time_ms
+      @stats_client.increment stat_name
+      @stats_client.timing    stat_name, total_time_ms
     end
 
     private

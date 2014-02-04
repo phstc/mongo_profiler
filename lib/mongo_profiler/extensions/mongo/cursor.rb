@@ -6,9 +6,7 @@ Mongo::Cursor.class_eval do
     original_send_initial_query
     total_time = Time.now - beginning_time
     begin
-      profiler = MongoProfiler::Profiler.new(@db)
-
-      return if profiler.should_skip?(instrument_payload) || profiler.disabled?
+      return if MongoProfiler.should_skip?(instrument_payload) || MongoProfiler.disabled?
 
       result = {}
 
@@ -28,10 +26,10 @@ Mongo::Cursor.class_eval do
       # TODO rename `_caller` object instance to something more meaningful in this context
       result[:backtrace]  = _caller._caller
 
-      profiler.log(result)
+      MongoProfiler.log(result)
 
-      if statsd_client = MongoProfiler.statsd_client
-        statsd_client.populate(_caller, total_time)
+      if stats_client = MongoProfiler.stats_client
+        stats_client.populate(_caller, total_time)
       end
     rescue => e
       p "MongoProfiler: #{e.message}"

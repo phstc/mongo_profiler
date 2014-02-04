@@ -18,12 +18,13 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "activesupport"
+  spec.add_dependency "activesupport"
 
-  spec.add_development_dependency "bundler" # , "~> 1.5"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "mongo", "1.9.2"
   spec.add_development_dependency "bson_ext"
   spec.add_development_dependency "rspec", "~> 2.14.1"
   spec.add_development_dependency "pry-byebug"
+  spec.add_development_dependency "sinatra"
+  spec.add_development_dependency "shotgun"
 end

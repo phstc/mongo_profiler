@@ -1,0 +1,22 @@
+<h1>Settings</h1>
+
+<h2>mongo_profiler_config</h2>
+<pre>
+<code>
+  <%= @collection_config_stats %>
+  </code>
+</pre>
+
+<h2>mongo_profiler</h2>
+<pre>
+<code>
+  <%= @collection_profiler_stats %>
+  </code>
+</pre>
+
+
+<script>
+$(function() {
+    $('pre code').each(function(i, e) { hljs.highlightBlock(e) });
+});
+</script>
