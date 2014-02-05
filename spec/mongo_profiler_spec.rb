@@ -39,8 +39,8 @@ describe MongoProfiler do
 
   describe '.group_id' do
     it 'uses default keys by default' do
-      expect(described_class.group_id).to have_key(:process_pid)
-      expect(described_class.group_id).to have_key(:thread_object_id)
+      expect(described_class.group_id).to match /process_pid/
+      expect(described_class.group_id).to match /thread_object_id/
     end
   end
 

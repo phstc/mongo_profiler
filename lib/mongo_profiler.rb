@@ -66,7 +66,7 @@ module MongoProfiler
       # For web applications a life cycle can be a request.
       # So people can filter all Mongo Queries per request based on request#url and/or request#uuid.
       @group_id ||= { process_pid:       Process.pid,
-                      thread_object_id:  Thread.current.object_id }
+                      thread_object_id:  Thread.current.object_id }.to_a.join('-')
     end
 
     def database=(database)
