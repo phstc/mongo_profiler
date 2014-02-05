@@ -17,8 +17,19 @@ module MongoProfiler
 
 
     get '/' do
-      @info_alert = 'Mongo Profiler is disabled.' if MongoProfiler.disabled?
       erb :index
+    end
+
+    post '/profiler/enable' do
+      MongoProfiler.enable!
+
+      redirect to('/settings')
+    end
+
+    post '/profiler/disable' do
+      MongoProfiler.disable!
+
+      redirect to('/settings')
     end
 
     get '/settings' do

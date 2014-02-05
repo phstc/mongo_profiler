@@ -1,20 +1,26 @@
-<h1>Settings</h1>
+<div class="row">
+  <% if MongoProfiler.enabled? %>
+    <form action="/profiler/disable" method="post">
+      <button class="btn btn-warning">Disable Profiler</button>
+    </form>
+  <% else %>
+    <form action="/profiler/enable" method="post">
+      <button class="btn btn-primary">Enable Profiler</button>
+    </form>
+  <% end %>
 
-<h2>mongo_profiler_config</h2>
-<pre>
-<code>
-  <%= @collection_config_stats %>
-  </code>
-</pre>
+  <h2>Profiler Collections<h2>
 
-<h2>mongo_profiler</h2>
-<pre>
-<code>
-  <%= @collection_profiler_stats %>
-  </code>
-</pre>
+  <div class="col-md-6">
+    <h4>mongo_profiler</h4>
+    <pre><code><%= @collection_profiler_stats %></code></pre>
+  </div>
 
-
+  <div class="col-md-6">
+    <h4>mongo_profiler_config</h4>
+    <pre><code><%= @collection_config_stats %></code></pre>
+  </div>
+</div>
 <script>
 $(function() {
     $('pre code').each(function(i, e) { hljs.highlightBlock(e) });

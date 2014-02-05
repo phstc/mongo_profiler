@@ -14,13 +14,13 @@ Dir['./spec/support/**/*.rb'].each &method(:require)
 MongoProfiler.database = DB
 MongoProfiler.application_name = 'project'
 
-# creates capped collections
-MongoProfiler.create_collections
-
 RSpec.configure do |config|
   config.after do
     DB.collections.each do |collection|
       collection.drop unless collection.name.match(/^system\./)
     end
+
+    # creates capped collections
+    MongoProfiler.create_collections
   end
 end
