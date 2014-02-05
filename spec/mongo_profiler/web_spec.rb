@@ -31,5 +31,14 @@ module MongoProfiler
         expect(MongoProfiler.disabled?).to be_true
       end
     end
+
+    describe 'GET /settings' do
+      it 'returns stats' do
+        get '/settings'
+
+        expect(last_response.body).to match /mongo_profiler/
+        expect(last_response.body).to match /mongo_profiler_config/
+      end
+    end
   end
 end
