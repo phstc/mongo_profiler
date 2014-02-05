@@ -31,23 +31,24 @@
     <th>Method</th>
     <th>Total Time</th>
     <th>Instrument Payload</th>
+    <th>&nbsp;</th>
   </thead>
   <% @grouped_profiles.each_with_index do |(method, profiles), grouped_index| %>
     <tbody class="<%= (grouped_index % 2 == 0) ? 'tbody-gray' : '' %>">
       <% profiles.each do |profile| %>
         <tr>
-          <td><a href="/profilers/<%= profile['_id'] %>"><%= profile['file'].split('/').last %>:<%= profile['line'] %></a></td>
+          <td><%= profile['file'].split('/').last %>:<%= profile['line'] %></td>
           <td><%= profile['method'] %></td>
           <td><%= profile['total_time'] %></td>
-          <td><%= profile['instrument_payload'] %></td>
+          <td><pre><code><%= profile['instrument_payload'] %></code></pre></td>
+          <td><a href="/profiler/<%= profile['_id'] %>/explain" class="btn btn-default">Explain</a></td>
         </tr>
-        <% if explain = profile['explain'] %>
-          <tr>
-            <td>Explain:</td>
-            <td colspan="4"><%= explain %></td>
-          </tr>
-        <% end %>
       <% end %>
     </tbody>
   <% end %>
 </table>
+<script>
+$(function() {
+    $('pre code').each(function(i, e) { hljs.highlightBlock(e) });
+});
+</script>
