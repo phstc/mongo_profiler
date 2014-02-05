@@ -72,7 +72,6 @@ module MongoProfiler
     end
 
     get '/profiler/:_id/explain' do
-
       @profile = MongoProfiler.collection.find_one(_id: BSON::ObjectId(params[:_id]))
       instrument_payload = JSON.parse(@profile['instrument_payload'])
 

@@ -1,29 +1,32 @@
 <h2 class="page-header">Profiles</h2>
-<table class="table table-bordered">
-  <thead>
-    <th>Application</th>
-    <th>File Name</th>
-    <th>Method</th>
-    <th>Total Queries</th>
-    <th>Total Time</th>
-    <th>Avg Total Time</th>
-    <th>Group Id</th>
-  </thead>
-  <% @grouped_profiles.each_with_index do |(group_id, profiles), grouped_index| %>
-    <tbody class="<%= (grouped_index % 2 == 0) ? 'tbody-gray' : '' %>">
-    <% profiles.each_with_index do |profile, profiles_index| %>
-      <tr>
-        <td><%= profile['application_name'] %></td>
-        <td><%= profile['file'].split('/').last %></td>
-        <td><%= profile['method'] %></td>
-        <td><%= profile['total'] %></td>
-        <td><%= profile['total_time'] %></td>
-        <td><%= profile['total_time'] / profile['total'] %></td>
-        <% if profiles_index == 0 %>
-        <td rowspan="<%= profiles.size %>"><a href="/profiler/groups/<%= group_id %>"><%= group_id %></a></td>
-        <% end %>
-      </tr>
+
+<div class="row">
+  <table class="table table-bordered">
+    <thead>
+      <th>Application</th>
+      <th>File Name</th>
+      <th>Method</th>
+      <th>Total Queries</th>
+      <th>Total Time</th>
+      <th>Avg Total Time</th>
+      <th>Group Id</th>
+    </thead>
+    <% @grouped_profiles.each_with_index do |(group_id, profiles), grouped_index| %>
+      <tbody class="<%= (grouped_index % 2 == 0) ? 'tbody-gray' : '' %>">
+      <% profiles.each_with_index do |profile, profiles_index| %>
+        <tr>
+          <td><%= profile['application_name'] %></td>
+          <td><%= profile['file'].split('/').last %></td>
+          <td><%= profile['method'] %></td>
+          <td><%= profile['total'] %></td>
+          <td><%= profile['total_time'] %></td>
+          <td><%= profile['total_time'] / profile['total'] %></td>
+          <% if profiles_index == 0 %>
+          <td rowspan="<%= profiles.size %>"><a href="/profiler/groups/<%= group_id %>"><%= group_id %></a></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
     <% end %>
-    </tbody>
-  <% end %>
-</table>
+  </table>
+</div>

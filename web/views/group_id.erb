@@ -1,6 +1,7 @@
 <h2 class="page-header">Profile <%= @group_id %></h2>
 
 <% if @sample_profile %>
+<div class="row">
   <table class="table table-bordered">
     <thead>
       <th>Application</th>
@@ -23,30 +24,33 @@
           </tr>
       </tbody>
   </table>
+</div>
 <% end %>
 
-<table class="table table-bordered">
-  <thead>
-    <th>File Name</th>
-    <th>Method</th>
-    <th>Total Time</th>
-    <th>Instrument Payload</th>
-    <th>&nbsp;</th>
-  </thead>
-  <% @grouped_profiles.each_with_index do |(method, profiles), grouped_index| %>
-    <tbody class="<%= (grouped_index % 2 == 0) ? 'tbody-gray' : '' %>">
-      <% profiles.each do |profile| %>
-        <tr>
-          <td><%= profile['file'].split('/').last %>:<%= profile['line'] %></td>
-          <td><%= profile['method'] %></td>
-          <td><%= profile['total_time'] %></td>
-          <td><pre><code><%= profile['instrument_payload'] %></code></pre></td>
-          <td><a href="/profiler/<%= profile['_id'] %>/explain" class="btn btn-default">Explain</a></td>
-        </tr>
-      <% end %>
-    </tbody>
-  <% end %>
-</table>
+<div class="row">
+  <table class="table table-bordered">
+    <thead>
+      <th>File Name</th>
+      <th>Method</th>
+      <th>Total Time</th>
+      <th>Instrument Payload</th>
+      <th>&nbsp;</th>
+    </thead>
+    <% @grouped_profiles.each_with_index do |(method, profiles), grouped_index| %>
+      <tbody class="<%= (grouped_index % 2 == 0) ? 'tbody-gray' : '' %>">
+        <% profiles.each do |profile| %>
+          <tr>
+            <td><%= profile['file'].split('/').last %>:<%= profile['line'] %></td>
+            <td><%= profile['method'] %></td>
+            <td><%= profile['total_time'] %></td>
+            <td><pre><code><%= profile['instrument_payload'] %></code></pre></td>
+            <td><a href="/profiler/<%= profile['_id'] %>/explain" class="btn btn-default">Explain</a></td>
+          </tr>
+        <% end %>
+      </tbody>
+    <% end %>
+  </table>
+</div>
 <script>
 $(function() {
     $('pre code').each(function(i, e) { hljs.highlightBlock(e) });
