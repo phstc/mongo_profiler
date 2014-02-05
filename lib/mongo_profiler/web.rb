@@ -56,5 +56,19 @@ module MongoProfiler
 
       erb :settings
     end
+
+    get '/profiler/groups/:group_id' do
+      @group_id = params[:group_id]
+      @profiles = MongoProfiler.collection.find(group_id: @group_id).to_a
+
+      @sample_profile = @profiles.first
+
+      @profiles_count = @profiles.count
+      @profiles_total_time = @profiles.reduce(0) { |sum, p| sum + p['total_time'] }
+
+      @grouped_profiles = @profiles.group_by { |profile| profile['method'] }
+
+      erb :group_id
+    end
   end
 end

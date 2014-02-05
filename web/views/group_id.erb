@@ -1,0 +1,53 @@
+<h2 class="page-header">Profile <%= @group_id %></h2>
+
+<% if @sample_profile %>
+  <table class="table table-bordered">
+    <thead>
+      <th>Application</th>
+      <th>Total Queries</th>
+      <th>Total Time</th>
+      <th>Avg Total Time</th>
+      <% @sample_profile['extra_attrs'].to_h.keys.each do |key| %>
+        <th><%= key %></th>
+      <% end %>
+    </thead>
+    <tbody>
+          <tr>
+            <td><%= @sample_profile['application_name'] %></td>
+            <td><%= @profiles_count %></td>
+            <td><%= @profiles_total_time %></td>
+            <td><%= @profiles_total_time / @profiles_count %></td>
+            <% @sample_profile['extra_attrs'].to_h.keys.each do |key| %>
+              <td><%= @sample_profile['extra_attrs'][key.to_s] %></td>
+            <% end %>
+          </tr>
+      </tbody>
+  </table>
+<% end %>
+
+<table class="table table-bordered">
+  <thead>
+    <th>File Name</th>
+    <th>Method</th>
+    <th>Total Time</th>
+    <th>Instrument Payload</th>
+  </thead>
+  <% @grouped_profiles.each_with_index do |(method, profiles), grouped_index| %>
+    <tbody class="<%= (grouped_index % 2 == 0) ? 'tbody-gray' : '' %>">
+      <% profiles.each do |profile| %>
+        <tr>
+          <td><a href="/profilers/<%= profile['_id'] %>"><%= profile['file'].split('/').last %>:<%= profile['line'] %></a></td>
+          <td><%= profile['method'] %></td>
+          <td><%= profile['total_time'] %></td>
+          <td><%= profile['instrument_payload'] %></td>
+        </tr>
+        <% if explain = profile['explain'] %>
+          <tr>
+            <td>Explain:</td>
+            <td colspan="4"><%= explain %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  <% end %>
+</table>
