@@ -17,6 +17,14 @@ module MongoProfiler
 
 
     get '/' do
+      @profiles = MongoProfiler.collection.
+        group({ key:     %i[method file application_name group_id],
+                reduce:  'function(curr, result) { result.total_time += curr.total_time; result.total += 1 }',
+                initial: { total: 0, total_time: 0 } })
+
+      # group profilers by group_id and sort by created_at DESC
+      @grouped_profiles = @profiles.group_by { |profile| profile['group_id'] }.to_a.reverse
+
       erb :index
     end
 
