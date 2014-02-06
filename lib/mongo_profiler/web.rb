@@ -42,8 +42,8 @@ module MongoProfiler
 
     get '/settings' do
       begin
-        @collection_config_stats   = JSON.pretty_generate MongoProfiler.collection_config.stats
-        @collection_profiler_stats = JSON.pretty_generate MongoProfiler.collection.stats
+        @collection_config_stats   = MongoProfiler.collection_config.stats.to_json
+        @collection_profiler_stats = MongoProfiler.collection.stats.to_json
       rescue Mongo::OperationFailure => e
         if e.message.match /ns not found/
           MongoProfiler.create_collections
@@ -81,17 +81,16 @@ module MongoProfiler
       begin
         # TODO replace $oid for BSON::ObjectId "selector":{"_id":{"$oid": "5180e2507575e48dd0000001"}}
         # TODO implement explain for $cmd queries {"database":"augury_development","collection":"$cmd","selector":{"distinct":"accepted","key":"message","query":{}},"limit":-1}
-        explain = MongoProfiler.database[collection_name].find(selector).explain
+        @explain = MongoProfiler.database[collection_name].find(selector).explain.to_json
       rescue => e
-        explain = { error: "Unable to generate explain: #{e.message}" }
+        @explain = { error: "Unable to generate explain: #{e.message}" }.to_json
       end
 
       # http://docs.mongodb.org/manual/core/capped-collections/
       # You can update documents in a collection after inserting them. However, these updates cannot cause the documents to grow. If the update operation causes the document to grow beyond their original size, the update operation will fail.
       # If you plan to update documents in a capped collection, create an index so that these update operations do not require a table scan.
       # MongoRubyProfiler.collection.update({ _id: BSON::ObjectId(params[:_id]) }, '$set' => { explain: explain } )
-      content_type :json
-      explain.to_json
+      erb :explain
     end
   end
 end

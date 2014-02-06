@@ -13,6 +13,10 @@
 </div>
 <script>
 $(function() {
-    $('pre code').each(function(i, e) { hljs.highlightBlock(e) });
+    $('pre code').each(function(i, e) {
+      var json = JSON.parse($(this).html());
+      $(this).html(JSON.stringify(json, null, 4));
+      hljs.highlightBlock(this);
+    });
 });
 </script>
