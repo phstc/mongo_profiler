@@ -22,10 +22,10 @@ module MongoProfiler
                 reduce:  'function(curr, result) { result.total_time += curr.total_time; result.total += 1 }',
                 initial: { total: 0, total_time: 0 } })
 
-      # group profilers by group_id and sort by created_at DESC
-      @grouped_profiles = @profiles.group_by { |profile| profile['group_id'] }.to_a.reverse
+        # group profilers by group_id and sort by created_at DESC
+        @grouped_profiles = @profiles.group_by { |profile| profile['group_id'] }.to_a.reverse
 
-      erb :index
+        erb :index
     end
 
     post '/profiler/enable' do
@@ -42,8 +42,8 @@ module MongoProfiler
 
     get '/settings' do
       begin
-        @collection_config_stats   = MongoProfiler.collection_config.stats.to_json
-        @collection_profiler_stats = MongoProfiler.collection.stats.to_json
+        @collection_config_stats   = MongoProfiler.collection_config.stats
+        @collection_profiler_stats = MongoProfiler.collection.stats
       rescue Mongo::OperationFailure => e
         if e.message.match /ns not found/
           MongoProfiler.create_collections
@@ -71,26 +71,27 @@ module MongoProfiler
       erb :group_id
     end
 
-    get '/profiler/:_id/explain' do
-      @profile = MongoProfiler.collection.find_one(_id: BSON::ObjectId(params[:_id]))
-      instrument_payload = JSON.parse(@profile['instrument_payload'])
+    get '/profiler/:_id' do
+      @profile_id = BSON::ObjectId(params[:_id])
+      @profile = MongoProfiler.collection.find_one(_id: @profile_id)
+      @instrument_payload = JSON.parse(@profile['instrument_payload'])
 
-      collection_name = instrument_payload['collection']
-      selector        = instrument_payload['selector']
+      @collection_name = @instrument_payload['collection']
+      @selector        = @instrument_payload['selector']
 
       begin
         # TODO replace $oid for BSON::ObjectId "selector":{"_id":{"$oid": "5180e2507575e48dd0000001"}}
         # TODO implement explain for $cmd queries {"database":"augury_development","collection":"$cmd","selector":{"distinct":"accepted","key":"message","query":{}},"limit":-1}
-        @explain = MongoProfiler.database[collection_name].find(selector).explain.to_json
+        @explain = MongoProfiler.database[@collection_name].find(@selector).explain
       rescue => e
-        @explain = { error: "Unable to generate explain: #{e.message}" }.to_json
+        @explain = { error: "Unable to generate explain: #{e.message}" }
       end
 
       # http://docs.mongodb.org/manual/core/capped-collections/
       # You can update documents in a collection after inserting them. However, these updates cannot cause the documents to grow. If the update operation causes the document to grow beyond their original size, the update operation will fail.
       # If you plan to update documents in a capped collection, create an index so that these update operations do not require a table scan.
       # MongoRubyProfiler.collection.update({ _id: BSON::ObjectId(params[:_id]) }, '$set' => { explain: explain } )
-      erb :explain
+      erb :show
     end
   end
 end

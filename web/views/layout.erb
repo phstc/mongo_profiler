@@ -8,6 +8,7 @@
 
     <!-- Bootstrap -->
     <link href="<%= root_path %>stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= root_path %>css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -69,11 +70,23 @@
 
     </div><!-- /.container -->
     <script>
-      // Remove active for all items.
-      $('ul.nav.navbar-nav li').removeClass('active');
+      $(function() {
+        // Remove active for all items.
+        $('ul.nav.navbar-nav li').removeClass('active');
 
-      // highlight submenu item
-      $('ul.nav.navbar-nav li a[href="' + window.location.pathname + '"]').parent().addClass('active');
+        // highlight submenu item
+        $('ul.nav.navbar-nav li a[href="' + window.location.pathname + '"]').parent().addClass('active');
+      });
     </script>
+
+    <script>
+      $(function() {
+          $('pre code').each(function(i, e) {
+            var json = JSON.parse($(this).html());
+            $(this).html(JSON.stringify(json, null, 4));
+            hljs.highlightBlock(this);
+          });
+      });
+  </script>
   </body>
 </html>

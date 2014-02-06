@@ -1,0 +1,34 @@
+<h2 class="page-header">Profile Id: <%= @profile_id %></h2>
+
+<div class="row">
+  <table class="table table-bordered">
+    <thead>
+      <th>File Name</th>
+      <th>Method</th>
+      <th>Total Time</th>
+      <th>Instrument Payload</th>
+      <th>Group Id</th>
+    </thead>
+    <tbody>
+        <tr>
+          <td><%= @profile['file'].split('/').last %>:<%= @profile['line'] %></td>
+          <td><%= @profile['method'] %></td>
+          <td><%= @profile['total_time'] %></td>
+          <td><pre><code><%= @profile['instrument_payload'] %></code></pre></td>
+          <td><a href="<%= root_path %>profiler/groups/<%= @profile['group_id'] %>"><%= @profile['group_id'] %></a></td>
+        </tr>
+      </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <div class="col-md-5">
+    <h4>Selector</h4>
+    <pre><code><%= @selector.to_json %></code></pre>
+  </div>
+
+  <div class="col-md-5">
+    <h4>Explain</h4>
+    <pre><code><%= @explain.to_json %></code></pre>
+  </div>
+</div>

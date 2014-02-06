@@ -1,4 +1,4 @@
-<h2 class="page-header">Profile <%= @group_id %></h2>
+<h2 class="page-header">Group Id: <%= @group_id %></h2>
 
 <% if @sample_profile %>
 <div class="row">
@@ -44,15 +44,10 @@
             <td><%= profile['method'] %></td>
             <td><%= profile['total_time'] %></td>
             <td><pre><code><%= profile['instrument_payload'] %></code></pre></td>
-              <td><a href="<%= root_path %>profiler/<%= profile['_id'] %>/explain" class="btn btn-default">Explain</a></td>
+              <td><a href="<%= root_path %>profiler/<%= profile['_id'] %>" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></td>
           </tr>
         <% end %>
       </tbody>
     <% end %>
   </table>
 </div>
-<script>
-$(function() {
-    $('pre code').each(function(i, e) { hljs.highlightBlock(e) });
-});
-</script>
