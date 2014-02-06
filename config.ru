@@ -1,3 +1,4 @@
+require 'pry-byebug'
 require 'mongo'
 require 'mongo_profiler'
 
