@@ -44,7 +44,7 @@
             <td><%= profile['method'] %></td>
             <td><%= profile['total_time'] %></td>
             <td><pre><code><%= profile['instrument_payload'] %></code></pre></td>
-            <td><a href="/profiler/<%= profile['_id'] %>/explain" class="btn btn-default">Explain</a></td>
+              <td><a href="<%= root_path %>profiler/<%= profile['_id'] %>/explain" class="btn btn-default">Explain</a></td>
           </tr>
         <% end %>
       </tbody>

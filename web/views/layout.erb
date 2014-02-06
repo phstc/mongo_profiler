@@ -28,25 +28,19 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Mongo Profiler</a>
+          <a class="navbar-brand" href="<%= root_path %>">Mongo Profiler</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/">Dashboard</a></li>
-            <li><a href="/settings">Settings</a></li>
+            <li><a href="<%= root_path %>">Dashboard</a></li>
+            <li><a href="<%= root_path %>settings">Settings</a></li>
           </ul>
           <% if MongoProfiler.enabled? %>
-            <form action="/profiler/disable" method="post" class="navbar-form navbar-right">
+            <form action="<%= root_path %>profiler/disable" method="post" class="navbar-form navbar-right">
               <button class="btn btn-danger">Disable Profiler</button>
             </form>
         <% else %>
-            <form action="/profiler/enable" method="post" class="navbar-form navbar-right">
+            <form action="<%= root_path %>profiler/enable" method="post" class="navbar-form navbar-right">
               <button class="btn btn-primary">Enable Profiler</button>
             </form>
         <% end %>

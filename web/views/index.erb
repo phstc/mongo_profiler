@@ -22,7 +22,7 @@
           <td><%= profile['total_time'] %></td>
           <td><%= profile['total_time'] / profile['total'] %></td>
           <% if profiles_index == 0 %>
-          <td rowspan="<%= profiles.size %>"><a href="/profiler/groups/<%= group_id %>"><%= group_id %></a></td>
+            <td rowspan="<%= profiles.size %>"><a href="<%= root_path %>profiler/groups/<%= group_id %>"><%= group_id %></a></td>
           <% end %>
         </tr>
       <% end %>
