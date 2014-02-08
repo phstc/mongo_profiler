@@ -21,23 +21,26 @@
   </table>
 </div>
 
-<div class="row">
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1h', '1min') %>">
+<% if MongoProfiler.graphite_url %>
+  <div class="row">
+    <h4>Graphite / Stats</h4>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1h', '1min', 'Last hour/min') %>">
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1day', '1h', 'Last day/hour') %>">
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1month', '1d', 'Last month/day') %>">
+      </div>
     </div>
   </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1day', '1h') %>">
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1month', '1d') %>">
-    </div>
-  </div>
-</div>
+<% end %>
 
 <div class="row">
   <div class="col-md-5">

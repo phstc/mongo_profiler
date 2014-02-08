@@ -14,7 +14,13 @@ module MongoProfiler
   COLLECTION_PROFILER_NAME = 'mongo_profiler'
 
   class << self
-    attr_accessor :extra_attrs, :group_id, :application_name, :database, :stats_client
+    attr_accessor :extra_attrs,
+      :group_id,
+      :application_name,
+      :database,
+      :stats_client,
+      :stats_prefix,
+      :graphite_url
 
     def log(document)
       collection.insert(document.merge(application_name:  MongoProfiler.application_name,
