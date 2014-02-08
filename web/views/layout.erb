@@ -81,8 +81,10 @@
     <script>
       $(function() {
           $('pre code').each(function(i, e) {
-            var json = JSON.parse($(this).html());
-            $(this).html(JSON.stringify(json, null, 4));
+            try {
+              var json = JSON.parse($(this).html());
+              $(this).html(JSON.stringify(json, null, 4));
+            } catch(e) {}
             hljs.highlightBlock(this);
           });
       });
