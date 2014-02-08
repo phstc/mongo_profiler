@@ -82,14 +82,14 @@ module MongoProfiler
 
         its(:system_distinct?) { should be_false }
       end
+    end
 
-      describe '#system_command?' do
-        pending
-      end
+    describe '#system_command?' do
+      pending
+    end
 
-      describe '#system_any?' do
-        pending
-      end
+    describe '#system_any?' do
+      pending
     end
   end
 end
