@@ -1,11 +1,44 @@
 require 'spec_helper'
 
 describe MongoProfiler do
-  describe '#log' do
+  describe '.log' do
     it 'merges required keys' do
       expect(MongoProfiler.collection).to receive(:insert).with({ application_name: MongoProfiler.application_name, group_id: MongoProfiler.group_id})
 
       described_class.log({})
+    end
+  end
+
+  describe '.connect' do
+    context 'without any argument' do
+      it 'connects to a mongo database' do
+        expect {
+          described_class.connect
+
+          expect(described_class.connected?).to be_true
+        }.to_not raise_error
+      end
+    end
+
+    context 'with arguemtns' do
+      it 'connects with host, port and database' do
+        expect {
+          described_class.connect('localhost', 27017, 'augury_development')
+
+          expect(described_class.database.name).to eq 'augury_development'
+          expect(described_class.connected?).to be_true
+        }.to_not raise_error
+      end
+    end
+
+    context 'when invalid config' do
+      it 'connects with host, port and database' do
+        expect {
+          described_class.connect('xxx')
+        }.to raise_error
+
+        expect(described_class.connected?).to be_false
+      end
     end
   end
 

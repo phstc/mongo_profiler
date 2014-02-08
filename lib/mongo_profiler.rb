@@ -6,7 +6,7 @@ require 'mongo_profiler/version'
 require 'mongo_profiler/profiler'
 require "mongo_profiler/caller"
 require "mongo_profiler/stats"
-require "mongo_profiler/extensions/mongo/cursor"
+# require "mongo_profiler/extensions/mongo/cursor"
 
 module MongoProfiler
   COLLECTION_CONFIG_NAME   = 'mongo_profiler_config'
@@ -98,6 +98,23 @@ module MongoProfiler
 
     def collection_config
       @collection_config ||= MongoProfiler.database[COLLECTION_CONFIG_NAME]
+    end
+
+    def connected?
+      !!(@connection && @database)
+    end
+
+    def connect(host = 'localhost', port = 27017, db = nil, user = nil, pass = nil, options = {})
+      @connection, @database = nil
+
+      @connection = Mongo::MongoClient.new(host, port, options)
+      if db
+        @database = @connection.db(db)
+      else
+        # default database
+        @database = @connection.db
+      end
+      @database.authenticate(user, pass) if user && pass
     end
   end
 end

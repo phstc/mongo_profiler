@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe 'Mongo::Cursor' do
+  let(:collection) { MongoProfiler.database['test-cursor'] }
+
   describe '#send_initial_query' do
     context 'when enabled' do
       let(:stats_client) { double('StatsD client').as_null_object }
@@ -15,13 +17,13 @@ describe 'Mongo::Cursor' do
         expect(stats_client).to receive(:increment).with(any_args)
         expect(stats_client).to receive(:timing).with(any_args)
 
-        COLL.find_one
+        collection.find_one
       end
 
       it 'creates a profiler entry' do
         expect {
-          COLL.insert(test: 'test')
-          expect(COLL.find_one['test']).to eq 'test'
+          collection.insert(test: 'test')
+          expect(collection.find_one['test']).to eq 'test'
         }.to change { MongoProfiler.collection.count }.by(1)
       end
     end
@@ -31,8 +33,8 @@ describe 'Mongo::Cursor' do
 
       it 'skips profiler entry' do
         expect {
-          COLL.insert(test: 'test')
-          expect(COLL.find_one['test']).to eq 'test'
+          collection.insert(test: 'test')
+          expect(collection.find_one['test']).to eq 'test'
         }.to_not change { MongoProfiler.collection.count }
       end
     end
