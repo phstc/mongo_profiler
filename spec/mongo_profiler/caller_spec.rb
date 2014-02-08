@@ -34,5 +34,50 @@ module MongoProfiler
       its(:method)  { should eq 'new' }
       its(:_caller) { should eq _caller }
     end
+
+    describe '#mongo_profiler_caller' do
+
+      context 'when mongo_profiler' do
+        let(:_caller) {
+          [
+            "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
+            "/Users/pablo/bundle/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
+            "/Users/pablo/workspace/project/spec/mongo_profiler.rb:7:in `new'",
+            "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `fetch'",
+            "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block in let'"
+          ]
+        }
+
+        its(:mongo_profiler_caller?) { should be_true }
+
+        context 'when _spec' do
+          let(:_caller) {
+            [
+              "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
+              "/Users/pablo/bundle/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
+              "/Users/pablo/workspace/project/spec/mongo_profiler_spec.rb:7:in `new'",
+              "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `fetch'",
+              "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block in let'"
+            ]
+          }
+
+          its(:mongo_profiler_caller?) { should be_false }
+        end
+      end
+
+      context 'when external' do
+        let(:_caller) {
+          [
+            "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
+            "/Users/pablo/bundle/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
+            "/Users/pablo/workspace/project/file.rb:7:in `new'",
+            "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `fetch'",
+            "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block in let'"
+          ]
+        }
+
+        its(:mongo_profiler_caller?) { should be_false }
+      end
+    end
   end
 end

@@ -6,7 +6,9 @@ Mongo::Cursor.class_eval do
     original_send_initial_query
     total_time = Time.now - beginning_time
     begin
-      return if MongoProfiler.should_skip?(instrument_payload) || MongoProfiler.disabled?
+      _caller = MongoProfiler::Caller.new(caller)
+
+      return if MongoProfiler.should_skip?(instrument_payload, _caller) || MongoProfiler.disabled?
 
       result = {}
 
@@ -14,8 +16,6 @@ Mongo::Cursor.class_eval do
 
       # the payload sent to mongo
       result[:instrument_payload] = JSON.dump(instrument_payload)
-
-      _caller = MongoProfiler::Caller.new(caller)
 
       result[:file]   = _caller.file
       result[:line]   = _caller.line

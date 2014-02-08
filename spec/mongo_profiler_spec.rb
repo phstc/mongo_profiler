@@ -42,14 +42,23 @@ describe MongoProfiler do
     end
   end
 
-  describe '#should_skip?' do
+  describe '.should_skip?' do
+    let(:_caller) {
+      [
+        "/Users/pablo/workspace/project/file.rb:7:in `new'",
+        "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block (2 levels) in let'",
+        "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `fetch'",
+        "/Users/pablo/.gem/ruby/2.0.0/gems/rspec-core-2.14.4/lib/rspec/core/memoized_helpers.rb:199:in `block in let'"
+      ]
+    }
+
     it 'accepts valid payload' do
       payload = { :database   => 'project',
                   :collection => 'stores',
                   :selector   => { '_id' => BSON::ObjectId('5282d125755b1c7f2c000005') },
                   :limit      => -1 }
 
-      expect(described_class.should_skip?(payload)).to be_false
+      expect(described_class.should_skip?(payload, MongoProfiler::Caller.new(_caller))).to be_false
     end
 
     it 'skips $cmd for unknown collections' do
@@ -58,7 +67,7 @@ describe MongoProfiler do
                   :selector   => { :getnonce => 1 },
                   :limit      => -1 }
 
-      expect(described_class.should_skip?(payload)).to be_true
+      expect(described_class.should_skip?(payload, MongoProfiler::Caller.new(_caller))).to be_true
     end
   end
 

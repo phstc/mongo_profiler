@@ -13,6 +13,10 @@ module MongoProfiler
       @method = project_callers[0][/`.*'/][1..-2]
     end
 
+    def mongo_profiler_caller?
+      _caller.any? { |line| line.include?('mongo_profiler') && !line.include?('_spec') }
+    end
+
     private
 
     def project_callers
