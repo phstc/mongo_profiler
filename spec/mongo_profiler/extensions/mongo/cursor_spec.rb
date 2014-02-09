@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Mongo::Cursor' do
-  let(:collection) { MongoProfiler.database['test-cursor'] }
+  let(:collection) { COLL }
 
   describe '#send_initial_query' do
     context 'when enabled' do

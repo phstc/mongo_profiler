@@ -21,7 +21,7 @@ module MongoProfiler
 
     def project_callers
       # skip gem/bundle entries
-      @project_callers ||= _caller.select { |line| !line.include?('bundle/ruby') && !line.include?('gem/ruby')  }
+      @project_callers ||= _caller.select { |line| !line.include?('bundle/ruby') && !line.include?('gem/ruby') && !line.include?('rubies/ruby')  }
     end
   end
 end

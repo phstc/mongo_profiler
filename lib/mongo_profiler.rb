@@ -4,10 +4,9 @@ require 'active_support/core_ext/hash/indifferent_access'
 
 require 'mongo_profiler/version'
 require 'mongo_profiler/profiler'
-require "mongo_profiler/caller"
-require "mongo_profiler/payload"
-require "mongo_profiler/stats"
-# require "mongo_profiler/extensions/mongo/cursor"
+require 'mongo_profiler/caller'
+require 'mongo_profiler/payload'
+require 'mongo_profiler/stats'
 
 module MongoProfiler
   COLLECTION_CONFIG_NAME   = 'mongo_profiler_config'
@@ -17,10 +16,11 @@ module MongoProfiler
     attr_accessor :extra_attrs,
       :group_id,
       :application_name,
-      :database,
       :stats_client,
       :stats_prefix,
       :graphite_url
+
+    attr_reader :database
 
     def log(document)
       collection.insert(document.merge(application_name:  MongoProfiler.application_name,
@@ -59,10 +59,6 @@ module MongoProfiler
                       thread_object_id:  Thread.current.object_id }.to_a.join('-')
     end
 
-    def database=(database)
-      @database = database
-    end
-
     def stats_client=(stats_client)
       @stats_client = MongoProfiler::Stats.new(stats_client)
     end
@@ -73,9 +69,9 @@ module MongoProfiler
       # 1_048_576 - 1MB
       # db.mongo_profiler_config.drop()
       # db.createCollection('mongo_profiler_config', { capped: true, size: 1048576, max: 1 })
-      database.create_collection(COLLECTION_CONFIG_NAME, { capped: true, size: 1_048_576, max: 1 })
+      @database.create_collection(COLLECTION_CONFIG_NAME, capped: true, size: 1_048_576, max: 1)
 
-      database.create_collection(COLLECTION_PROFILER_NAME, { capped: true, size: 4_001_792, max: 9223372036854775807 })
+      @database.create_collection(COLLECTION_PROFILER_NAME, capped: true, size: 4_001_792, max: 9223372036854775807)
       # 4_001_792   - 3.82MB - db.system.profile.stats()
       # 104_857_600 - 100MB
       # db.mongo_profiler.drop()
@@ -83,11 +79,11 @@ module MongoProfiler
     end
 
     def collection
-      @collection ||= MongoProfiler.database[COLLECTION_PROFILER_NAME]
+      @collection ||= @database[COLLECTION_PROFILER_NAME]
     end
 
     def collection_config
-      @collection_config ||= MongoProfiler.database[COLLECTION_CONFIG_NAME]
+      @collection_config ||= @database[COLLECTION_CONFIG_NAME]
     end
 
     def connected?

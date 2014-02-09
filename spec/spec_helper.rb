@@ -12,9 +12,6 @@ COLL       = DB['example-collection']
 
 Dir['./spec/support/**/*.rb'].each &method(:require)
 
-MongoProfiler.database = DB
-MongoProfiler.application_name = 'project'
-
 RSpec.configure do |config|
   config.before do
     MongoProfiler.connect('localhost', 27017, 'mongo_profiler-database-test')

@@ -23,20 +23,39 @@
 
 <% if MongoProfiler.graphite_url %>
   <div class="row">
-    <h4>Graphite / Stats</h4>
+    <h4>Graphite / Timers</h4>
     <div class="col-sm-6 col-md-4">
       <div class="thumbnail">
-        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1h', '1min', 'Last hour/min') %>">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_timers_url(@profile, '-1h', '1min', 'Last hour/min') %>">
       </div>
     </div>
     <div class="col-sm-6 col-md-4">
       <div class="thumbnail">
-        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1day', '1h', 'Last day/hour') %>">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_timers_url(@profile, '-1day', '1h', 'Last day/hour') %>">
       </div>
     </div>
     <div class="col-sm-6 col-md-4">
       <div class="thumbnail">
-        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_url(@profile, '-1month', '1d', 'Last month/day') %>">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_timers_url(@profile, '-1month', '1d', 'Last month/day') %>">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <h4>Graphite / Count</h4>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_count_url(@profile, '-1h', '1min', 'Last hour/min') %>">
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_count_url(@profile, '-1day', '1h', 'Last day/hour') %>">
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img data-src="holder.js/300x200" alt="..." src="<%= graphite_graph_count_url(@profile, '-1month', '1d', 'Last month/day') %>">
       </div>
     </div>
   </div>
@@ -56,5 +75,9 @@
 
 <div class="row">
   <h4>Backtrace</h4>
-  <pre><code><%= @profile['backtrace'] %></code></pre>
+  <ol>
+    <% @profile['backtrace'].to_a.each do |c| %>
+      <li><%= print_backtrace_entry(c) %></li>
+    <% end %>
+  </ol>
 </div>

@@ -25,7 +25,6 @@ describe MongoProfiler do
         expect {
           described_class.connect('localhost', 27017, 'augury_development')
 
-          expect(described_class.database.name).to eq 'augury_development'
           expect(described_class.connected?).to be_true
         }.to_not raise_error
       end
