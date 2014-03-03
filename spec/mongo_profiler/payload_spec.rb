@@ -85,7 +85,23 @@ module MongoProfiler
     end
 
     describe '#system_command?' do
-      pending
+      context 'when count' do
+        let(:payload) { { collection:  '$cmd', selector: { count: 'something' } } }
+
+        its(:system_command?) { should be_false }
+      end
+
+      context 'when distinct' do
+        let(:payload) { { collection:  '$cmd', selector: { distinct: 'something' } } }
+
+        its(:system_command?) { should be_false }
+      end
+
+      context 'when other' do
+        let(:payload) { { collection:  '$cmd', selector: { getnonce: -1 } } }
+
+        its(:system_command?) { should be_true }
+      end
     end
 
     describe '#system_any?' do

@@ -23,17 +23,11 @@ module MongoProfiler
     end
 
     def system_command?
-      # check acceptable commands - must be count or distinct
-      payload['collection'] == '$cmd' && (!payload['selector'].to_h.has_key?('count') ||
-                                          payload['selector'].to_h.has_key?('distinct'))
+      payload['collection'] == '$cmd' && !(payload['selector'].to_h.has_key?('count') || payload['selector'].to_h.has_key?('distinct'))
     end
 
     def system_any?
-      system_database? ||
-        system_collection? ||
-        system_count? ||
-        system_distinct? ||
-        system_command?
+      system_database? || system_collection? || system_count? || system_distinct? || system_command?
     end
   end
 end
