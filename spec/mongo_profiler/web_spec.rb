@@ -32,15 +32,6 @@ module MongoProfiler
       end
     end
 
-    describe 'GET /settings' do
-      it 'returns stats' do
-        get '/settings'
-
-        expect(last_response.body).to match /mongo_profiler/
-        expect(last_response.body).to match /mongo_profiler_config/
-      end
-    end
-
     describe 'GET /profiler/groups/:group_id' do
       pending
     end

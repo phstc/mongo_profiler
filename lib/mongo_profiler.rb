@@ -32,10 +32,17 @@ module MongoProfiler
     end
 
     def disable!
+      # maybe we can refactor to check if the collections exist before trying to create them.
+      # we must make sure the collections are in place before enabled/disable otherwise mongo will create a normal collection,
+      # not a capped one, breaking the disable & enable functionality
+      create_collections
+
       collection_config.insert(enabled: false)
     end
 
     def enable!
+      create_collections
+
       collection_config.insert(enabled: true)
     end
 

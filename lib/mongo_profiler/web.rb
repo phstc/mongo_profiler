@@ -31,30 +31,13 @@ module MongoProfiler
     post '/profiler/enable' do
       MongoProfiler.enable!
 
-      redirect to('/settings')
+      redirect to('/')
     end
 
     post '/profiler/disable' do
       MongoProfiler.disable!
 
-      redirect to('/settings')
-    end
-
-    get '/settings' do
-      begin
-        @collection_config_stats   = MongoProfiler.collection_config.stats
-        @collection_profiler_stats = MongoProfiler.collection.stats
-      rescue Mongo::OperationFailure => e
-        if e.message.match /ns not found/
-          MongoProfiler.create_collections
-          # TODO Ask before create collections
-          redirect to('/settings')
-        else
-          @error_alert = e.message
-        end
-      end
-
-      erb :settings
+      redirect to('/')
     end
 
     get '/profiler/groups/:group_id' do
