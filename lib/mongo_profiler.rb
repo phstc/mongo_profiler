@@ -41,6 +41,7 @@ module MongoProfiler
     end
 
     def enable!
+      # check `disable!` comment
       create_collections
 
       collection_config.insert(enabled: true)
@@ -59,7 +60,7 @@ module MongoProfiler
     end
 
     def group_id
-      # The group_id is used to determine the life cycle where the queries ocurred.
+      # The group_id is used to determine the life cycle where the queries occurred.
       # For web applications a life cycle can be a request.
       # So people can filter all Mongo Queries per request based on request#url and/or request#uuid.
       @group_id ||= { process_pid:       Process.pid,
@@ -72,17 +73,11 @@ module MongoProfiler
 
     def create_collections
       # http://docs.mongodb.org/manual/core/capped-collections/
-      # Config database must have only one document
-      # 1_048_576 - 1MB
-      # db.mongo_profiler_config.drop()
-      # db.createCollection('mongo_profiler_config', { capped: true, size: 1048576, max: 1 })
+      # 1_048_576 - 1MB - allows only one document (max: 1)
       @database.create_collection(COLLECTION_CONFIG_NAME, capped: true, size: 1_048_576, max: 1)
 
+      # 4_001_792 - 3.82MB - same size as db.system.profile.stats()
       @database.create_collection(COLLECTION_PROFILER_NAME, capped: true, size: 4_001_792, max: 9223372036854775807)
-      # 4_001_792   - 3.82MB - db.system.profile.stats()
-      # 104_857_600 - 100MB
-      # db.mongo_profiler.drop()
-      # db.createCollection('mongo_profiler', { capped: true, size: 4001792, max: 9223372036854775807 })
     end
 
     def collection
