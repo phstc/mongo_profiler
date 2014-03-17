@@ -45,16 +45,17 @@ module MongoProfiler
       file_key   = sanitaze_stat_key(file)
       method_key = sanitaze_stat_key(method)
 
-      "alias(summarize(stats.timers.augury.staging.mongo_profiler.#{application_name}.#{file_key}.#{method_key}.mean, '#{size}', 'mean'), '#{file}##{method}')"
+      "alias(summarize(stats.timers.#{MongoProfiler.stats_prefix}mongo_profiler.#{application_name}.#{file_key}.#{method_key}.mean, '#{size}', 'mean'), '#{file}##{method}')"
     end
 
     def graphite_count_target(application_name, file, method, size)
       file       = file.split('/').last
       file_key   = sanitaze_stat_key(file)
       method_key = sanitaze_stat_key(method)
-      # stats.timers. / mean
 
-      "alias(summarize(stats_counts.augury.staging.mongo_profiler.#{application_name}.#{file_key}.#{method_key}, '#{size}', 'sum'), '#{file}##{method}')"
+      binding.pry
+
+      "alias(summarize(stats_counts.#{MongoProfiler.stats_prefix}mongo_profiler.#{application_name}.#{file_key}.#{method_key}, '#{size}', 'sum'), '#{file}##{method}')"
     end
 
     def sanitaze_stat_key(key)

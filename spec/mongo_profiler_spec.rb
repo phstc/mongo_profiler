@@ -20,10 +20,10 @@ describe MongoProfiler do
       end
     end
 
-    context 'with arguemtns' do
+    context 'with arguments' do
       it 'connects with host, port and database' do
         expect {
-          described_class.connect('localhost', 27017, 'augury_development')
+          described_class.connect('localhost', 27017, 'project_development')
 
           expect(described_class.connected?).to be_true
         }.to_not raise_error

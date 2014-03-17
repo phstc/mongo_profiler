@@ -7,7 +7,6 @@ module MongoProfiler
 
 
     describe '#graphite_graph_url' do
-
       before { MongoProfiler.graphite_url = 'http://graphite' }
 
       let(:profile) { { 'method' => 'load_schedulers',
@@ -17,14 +16,14 @@ module MongoProfiler
 
       context 'when -1h and 1min' do
         xit 'generates graphite url' do
-          expect(subject.graphite_graph_url(profile, '-1h', '1min', 'hello')).to eq("http://graphite/render?from=-1h&until=now&width=400&height=250&target=alias(summarize(stats_counts.augury.staging.mongo_profiler..schedule_rb.load_schedulers,%20'1min',%20'sum'),%20'schedule.rb%23load_schedulers')&title=hello")
+          expect(subject.graphite_graph_url(profile, '-1h', '1min', 'hello')).to eq("http://graphite/render?from=-1h&until=now&width=400&height=250&target=alias(summarize(stats_counts.mongo_profiler..schedule_rb.load_schedulers,%20'1min',%20'sum'),%20'schedule.rb%23load_schedulers')&title=hello")
         end
       end
     end
 
     describe '#print_backtrace_entry' do
       it 'prints project entry' do
-        c = %{/Users/pablo/workspace/augury_admin/app/controllers/queues_controller.rb:34:in `show'}
+        c = %{/Users/pablo/workspace/project/app/controllers/queues_controller.rb:34:in `show'}
         expect(subject.print_backtrace_entry(c)).to eq %{<span class="btn-info">#{c}</span>}
       end
 

@@ -63,8 +63,6 @@ module MongoProfiler
       @selector        = @instrument_payload['selector']
 
       begin
-        # TODO replace $oid for BSON::ObjectId "selector":{"_id":{"$oid": "5180e2507575e48dd0000001"}}
-        # TODO implement explain for $cmd queries {"database":"augury_development","collection":"$cmd","selector":{"distinct":"accepted","key":"message","query":{}},"limit":-1}
         @selector.each_pair do |key, value|
           if value.is_a? Hash
             if value.first[0] == '$oid'
