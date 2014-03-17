@@ -10,6 +10,8 @@ An interesting feature in the Mongo Profiler is that we can group queries by "li
 
 First time I used it, I was shocked to see some pages doing lot of duplicated queries, even though some were really fast, they were unnecessary, I could get rid of some of them just by "memorising" some documents.
 
+So, that is how Mongo Profiler could help you, showing what's really happening in your application.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -84,21 +86,25 @@ MyApplication::Application.routes.draw do
 end
 ```
 
-## Screenshots
+## Dashboard
 
-### Dashboard index
+The screenshots below are from the Mongo Profiler Dashboard. It is Rack application, which you can mount it in any other Rack application as detailed above or you could also start it directly as in the [config.ru example](https://github.com/phstc/mongo_profiler/blob/master/config.ru) in this repo.
+
+### Screenshots
+
+#### Dashboard index
 
 ![Dashboard Index](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_dashboard_index.png)
 
-### Queries Group Index
+#### Queries Group Index
 
 ![Queries Group Index](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_group_details.png)
 
-### Query details
+#### Query details
 
 ![Query Details](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_query_details.png)
 
-### Query details (backtrace)
+#### Query details (backtrace)
 
 ![Query Details Backtrace](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_query_details_backtrace.png)
 
