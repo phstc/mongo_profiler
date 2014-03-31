@@ -12,6 +12,12 @@ First time I used it, I was shocked to see some pages doing lot of duplicated qu
 
 So, that is how Mongo Profiler could help you, showing what's really happening in your application.
 
+## Sample App
+
+* Sample Dashboard: https://mongo-profiler-sample-app.herokuapp.com/mongo_profiler
+* Sample App: https://mongo-profiler-sample-app.herokuapp.com
+* Sample App source code: https://github.com/phstc/mongo_profiler_sample_app
+
 ## Installation
 
 Add this line to your application's Gemfile:
