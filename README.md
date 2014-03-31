@@ -30,6 +30,9 @@ Or install it yourself as:
 
 ### Rails application
 
+To mount Mongo Profiler inside Rails, remember to add `gem 'sinatra', require: nil` in your Gemfile.
+
+
 ```ruby
 # config/initializers/mongo_profiler_setup.rb
 
