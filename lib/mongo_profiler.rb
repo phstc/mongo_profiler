@@ -89,19 +89,23 @@ module MongoProfiler
     end
 
     def connected?
-      !!(@connection && @database)
+      !!@database
+    end
+
+    def setup_database(database)
+      @database = database
     end
 
     def connect(host = 'localhost', port = 27017, db = nil, user = nil, pass = nil, options = {})
-      @connection, @database = nil
+      connection = Mongo::MongoClient.new(host, port, options)
 
-      @connection = Mongo::MongoClient.new(host, port, options)
       if db
-        @database = @connection.db(db)
+        @database = connection.db(db)
       else
         # default database
-        @database = @connection.db
+        @database = connection.db
       end
+
       @database.authenticate(user, pass) if user && pass
     end
   end
