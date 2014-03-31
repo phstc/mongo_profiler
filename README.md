@@ -61,8 +61,6 @@ class ApplicationController < ActionController::Base
 
     # to show the request url
     MongoProfiler.extra_attrs[:request_url]  = request.url
-  rescue => e
-    p "MongoProfiler: #{e.message}"
   end
 end
 ```
