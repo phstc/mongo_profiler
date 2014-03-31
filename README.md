@@ -1,14 +1,14 @@
 # Mongo Profiler
 
-Database profiling tools are awesome and always useful. I love [Mongo Profiling](http://docs.mongodb.org/manual/tutorial/manage-the-database-profiler/). But unfortunately these tools don't match queries and code they are profiling, so sometimes isn't easy to match where the slow queries are performed.
+Database profiling tools are awesome and always useful. I love [Mongo Profiling](http://docs.mongodb.org/manual/tutorial/manage-the-database-profiler/). But unfortunately these tools don't match the queries and source code they are profiling and  sometimes making hard to find where the slow queries are executed.
 
-The Mongo Profiler is a <del>refinement</del> patch in the [mongo-ruby-driver](https://github.com/mongodb/mongo-ruby-driver) to log all execute queries and their respective callers in a [capped collections](http://docs.mongodb.org/manual/core/capped-collections/).
+The Mongo Profiler is a <del>refinement</del> patch in the [mongo-ruby-driver](https://github.com/mongodb/mongo-ruby-driver) to log all executed queries and their respective callers ([Ruby backtrace](http://www.ruby-doc.org/core-2.1.1/Kernel.html#method-i-caller)) in a [capped collections](http://docs.mongodb.org/manual/core/capped-collections/).
 
-It isn't competitor for the Mongo's built-in profiling, it is just a complementary tool to help us to profile our queries.
+It isn't replacement for the Mongo's built-in profiling, it is just a complementary tool to profile the queries and their respective source code.
 
 An interesting feature in the Mongo Profiler is that we can group queries by "life cycles". For example, in a web application it can be the `request_id`, so you will be able to see how many queries, how long did they take, the explain plans etc for a specific request.
 
-First time I used it, I was shocked to see some pages doing lot of duplicated queries, even though some were really fast, they were unnecessary, I could get rid of some of them just by "memorising" some documents.
+First time I used it, I was shocked to see some pages doing lot of duplicated queries, even though some were really fast, they were unnecessary, I could get rid of some of them just by "memorising" some queries.
 
 So, that is how Mongo Profiler could help you, showing what's really happening in your application.
 
