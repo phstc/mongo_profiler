@@ -1,13 +1,13 @@
-require 'pry-byebug'
 require 'mongo'
 require 'mongo_profiler'
-
 require 'mongo_profiler/web'
 
-CONNECTION = Mongo::MongoClient.new
-DB         = CONNECTION.db('mongo_profiler-database')
-COLL       = DB['example-collection']
+client = Mongo::MongoClient.new
+DB     = client.db('sample_app_database')
 
-MongoProfiler.connect('localhost', 27017, 'mongo_profiler-database')
+
+MongoProfiler.setup_database(DB)
+# or
+# MongoProfiler.connect('localhost', 27017, 'sample_app_database')
 
 run MongoProfiler::Web
