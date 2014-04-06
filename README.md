@@ -1,5 +1,7 @@
 # Mongo Profiler
 
+[![Build Status](https://travis-ci.org/phstc/mongo_profiler.svg)](https://travis-ci.org/phstc/mongo_profiler)
+
 **Mongo profiling tool which matches queries with code**
 
 Database profiling tools are awesome and always useful. I love [Mongo profiling](http://docs.mongodb.org/manual/tutorial/manage-the-database-profiler/). But unfortunately these tools don't match the queries with the source code they are profiling, making hard to find where the slow queries are executed.
