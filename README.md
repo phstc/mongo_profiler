@@ -12,8 +12,6 @@ It isn't replacement for the Mongo's built-in profiling, it is just a complement
 
 An interesting feature in the Mongo Profiler is that we can group queries by "life cycles". For example, in a web application it can be the `request_id`, so you will be able to see how many queries, how long did they take, the explain plans etc for each request.
 
-First time I used it, I was shocked to see some pages doing lot of duplicated queries, even though some were really fast, they were unnecessary, I could get rid of some of them just by "memorising" some queries.
-
 ## Sample App
 
 You can see how it works through the [Sample Dashboard](https://mongo-profiler-sample-app.herokuapp.com/mongo_profiler) and [Sample App](https://mongo-profiler-sample-app.herokuapp.com) ([source code](https://github.com/phstc/mongo_profiler_sample_app)).
