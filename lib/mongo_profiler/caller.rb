@@ -3,7 +3,7 @@ module MongoProfiler
     attr_reader :file, :line, :method, :_caller
 
     def initialize(_caller)
-      @_caller = _caller.dup
+      @_caller = _caller
 
       caller_head = project_callers[0].split ':'
 
@@ -13,15 +13,13 @@ module MongoProfiler
       @method = project_callers[0][/`.*'/][1..-2]
     end
 
-    def mongo_profiler_caller?
-      _caller.any? { |line| line.include?('mongo_profiler') && !line.include?('_spec') }
-    end
-
     private
 
     def project_callers
       # skip gem/bundle entries
-      @project_callers ||= _caller.select { |line| !line.include?('bundle/ruby') && !line.include?('gem/ruby') && !line.include?('rubies/ruby')  }
+      @project_callers ||= _caller.reject do |entry|
+        entry.include?('bundle/ruby') || entry.include?('gem/ruby') || entry.include?('rubies/ruby') || entry.include?('mongo_profiler')
+      end
     end
   end
 end

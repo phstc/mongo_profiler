@@ -8,8 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = MongoProfiler::VERSION
   spec.authors       = ["Pablo Cantero"]
   spec.email         = ["pablo@pablocantero.com"]
-  spec.summary       = %q{Ruby profiling tool for MongoDB}
-  spec.description   = %q{A Ruby profiling tool for MongoDB}
+  spec.summary = spec.description = %q{Ruby profiling tool for MongoDB}
   spec.homepage      = "https://github.com/phstc/mongo_profiler"
   spec.license       = "MIT"
 
@@ -21,8 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport"
 
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "mongo", "1.9.2"
-  spec.add_development_dependency "bson_ext"
+  spec.add_development_dependency "mongoid"
   spec.add_development_dependency "rspec", "~> 2.14.1"
   spec.add_development_dependency "pry-byebug"
   spec.add_development_dependency "sinatra"

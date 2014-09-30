@@ -36,15 +36,6 @@
             <li><a href="<%= root_path %>">Dashboard</a></li>
           </ul>
           -->
-          <% if MongoProfiler.enabled? %>
-            <form action="<%= root_path %>profiler/disable" method="post" class="navbar-form navbar-right">
-              <button class="btn btn-danger">Disable Profiler</button>
-            </form>
-        <% else %>
-            <form action="<%= root_path %>profiler/enable" method="post" class="navbar-form navbar-right">
-              <button class="btn btn-primary">Enable Profiler</button>
-            </form>
-        <% end %>
         </div><!--/.nav-collapse -->
       </div>
     </div>

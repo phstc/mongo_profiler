@@ -1,32 +1,72 @@
 <h2 class="page-header">Profile Groups</h2>
 
+<style>
+  tr, td, pre
+  {
+    height:60px;
+    max-height:60px;
+  }
+</style>
+
+<script>
+$(function(){
+    $('tr pre').click(function(){
+       var height = '400px';
+
+      if($(this).height() > 300){
+        height = '60px';
+      }
+
+      $(this).animate({ 'height': height, 'max-height': height });
+    })
+
+    $('.header').click(function(){
+      $(this).next('tbody').toggle()
+    });
+});
+</script>
+
 <div class="row">
   <table class="table table-bordered">
     <thead>
-      <th>Application</th>
-      <th>File Name</th>
-      <th>Method</th>
-      <th>Total Queries</th>
-      <th>Total Time</th>
-      <th>Avg Total Time</th>
-      <th>Group Id</th>
+      <th>Queries</th>
+      <th>Total time</th>
+      <th>Group name</th>
     </thead>
-    <% @grouped_profiles.each_with_index do |(group_id, profiles), grouped_index| %>
-      <tbody class="<%= (grouped_index % 2 == 0) ? 'tbody-gray' : '' %>">
-      <% profiles.each_with_index do |profile, profiles_index| %>
-        <tr>
-          <td><%= profile['application_name'] %></td>
-          <td><%= profile['file'].split('/').last %></td>
-          <td><%= profile['method'] %></td>
-          <td><%= profile['total'] %></td>
-          <td><%= profile['total_time'] %></td>
-          <td><%= profile['total_time'] / profile['total'] %></td>
-          <% if profiles_index == 0 %>
-            <td rowspan="<%= profiles.size %>"><a href="<%= root_path %>profiler/groups/<%= group_id %>"><%= group_id %></a></td>
-          <% end %>
-        </tr>
-      <% end %>
-      </tbody>
-    <% end %>
+      <tbody class="header">
+        <% @groups.each do |group| %>
+          <tr bgcolor="#ccc">
+            <td><strong>(<%= group.profiles.to_a.size %>)</strong></td>
+            <td><%= group.profiles.sum &:total_time %></td>
+            <td><%= group.name %></td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <table class="table table-bordered">
+                <thead class="header">
+                  <th>Total Time</th>
+                  <th>File Name</th>
+                  <th>Database</th>
+                  <th>Collection</th>
+                  <th>Command</th>
+                  <th>Explain</th>
+                </thead>
+                  <tbody>
+                        <% group.profiles.sort_by(&:total_time).reverse.each do |profile| %>
+                          <tr>
+                            <td><%= profile['total_time'] %></td>
+                            <td><%= "#{profile['file'].split('/').last}:#{profile['line']}" %></td>
+                            <td><%= profile['command_database'] %></td>
+                            <td><%= profile['command_collection'] %></td>
+                            <td><pre style="width: 300px"><code><%= profile['command'] %></code></pre></td>
+                            <td><pre style="width: 300px"><code><%= profile['explain'] %></code></pre></td>
+                          </tr>
+                        <% end %>
+                  </tbody>
+              </table>
+            </td>
+           </tr>
+        <% end %>
+    </tbody>
   </table>
 </div>
