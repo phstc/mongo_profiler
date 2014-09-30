@@ -16,6 +16,14 @@ module MongoProfiler
 
     belongs_to :profile_group
 
+    def score
+      explain = JSON.parse(self.explain)
+      return 0 if explain['n'] == 0
+      (explain['nscannedObjects'] * 100) / explain['n']
+    rescue => e
+      e.message
+    end
+
     class << self
       def register(started_at, database, collection, selector, options = {})
         return if collection =~ /mongo_profiler/

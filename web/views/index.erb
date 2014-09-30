@@ -45,6 +45,7 @@ $(function(){
               <table class="table table-bordered">
                 <thead class="header">
                   <th>Total Time</th>
+                  <th>Query score</th>
                   <th>File Name</th>
                   <th>Database</th>
                   <th>Collection</th>
@@ -55,6 +56,7 @@ $(function(){
                         <% group.profiles.sort_by(&:total_time).reverse.each do |profile| %>
                           <tr>
                             <td><%= profile['total_time'] %></td>
+                            <td><%= profile.score %></td>
                             <td><%= "#{profile['file'].split('/').last}:#{profile['line']}" %></td>
                             <td><%= profile['command_database'] %></td>
                             <td><%= profile['command_collection'] %></td>
