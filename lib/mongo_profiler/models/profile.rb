@@ -13,8 +13,11 @@ module MongoProfiler
     field :file, type: String
     field :line, type: Integer
     field :method, type: String
+    field :selector_md5, type: String
 
     belongs_to :profile_group
+
+    index group_id: 1, selector_md5: 1
 
     def score
       explain = JSON.parse(self.explain)
@@ -66,10 +69,15 @@ module MongoProfiler
                 end
 
         # TODO implement deep_keys
-        id = collection + query.keys.sort.join + _caller.file + _caller.line.to_s
-        id = Digest::MD5.hexdigest(id)
+        selector_md5 = collection + query.keys.sort.join + _caller.file + _caller.line.to_s
+        selector_md5 = Digest::MD5.hexdigest(selector_md5)
+
+        return if Profile.where(selector_md5: selector_md5, group_id: group_id).any?
 
         result = {}
+        result[:selector_md5]       = selector_md5
+        result[:profile_group]      = group
+
         result[:total_time]         = elapsed(started_at)
         result[:command_database]   = database
         result[:command_collection] = collection
@@ -77,9 +85,6 @@ module MongoProfiler
         result[:file]               = _caller.file
         result[:line]               = _caller.line
         result[:method]             = _caller.method
-        result[:profile_group]      = group
-
-        result[:id] = id
 
         # TODO do it in background
         result[:explain] = JSON.dump(self.collection.database[collection].find(query).explain)

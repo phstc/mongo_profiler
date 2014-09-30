@@ -13,15 +13,16 @@ module MongoProfiler
       profiles.sum(&:total_time)
     end
 
-    def avg_total_time
-      total_time / profiles.count
+    def avg_time
+      return 0 if (count = profiles.count) == 0
+      total_time / count
     end
 
-    def min_total_time
+    def min_time
       profiles.collect(&:total_time).min
     end
 
-    def max_total_time
+    def max_time
       profiles.collect(&:total_time).max
     end
 
