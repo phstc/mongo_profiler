@@ -18,7 +18,8 @@ module MongoProfiler
 
     def score
       explain = JSON.parse(self.explain)
-      return 0 if explain['n'] == 0
+      return 'No index' if explain['cursor'] == 'BasicCursor'
+      return 'No docs found' if explain['n'] == 0
       (explain['nscannedObjects'] * 100) / explain['n']
     rescue => e
       e.message
@@ -27,6 +28,7 @@ module MongoProfiler
     class << self
       def register(started_at, database, collection, selector, options = {})
         return if collection =~ /mongo_profiler/
+        return if selector['$explain']
 
         _caller = MongoProfiler::Caller.new(caller)
 
@@ -62,7 +64,7 @@ module MongoProfiler
         result[:id] = id
 
         # TODO do it in background
-        result[:explain] = JSON.dump(self.collection.find(query).explain)
+        result[:explain] = JSON.dump(self.collection.database[collection].find(query).explain)
 
         self.create(result)
       end
