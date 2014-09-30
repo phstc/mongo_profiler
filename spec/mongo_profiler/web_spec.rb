@@ -9,35 +9,5 @@ module MongoProfiler
     def app
       described_class
     end
-
-    describe 'POST /profiler/enable' do
-      it 'enables profiler' do
-        MongoProfiler.disable!
-
-        post '/profiler/enable'
-
-        expect(last_response.status).to eq 302
-        expect(MongoProfiler.enabled?).to be_true
-      end
-    end
-
-    describe 'POST /profiler/disable' do
-      it 'disables profiler' do
-        MongoProfiler.enable!
-
-        post '/profiler/disable'
-
-        expect(last_response.status).to eq 302
-        expect(MongoProfiler.disabled?).to be_true
-      end
-    end
-
-    describe 'GET /profiler/groups/:group_id' do
-      pending
-    end
-
-    describe 'GET /profiler/:_id/explain' do
-      pending
-    end
   end
 end
