@@ -25,16 +25,16 @@ module MongoProfiler
       scan_and_order = explain['scanAndOrder']
 
       case
-      when n == 0
-        :no_docs_found
+      when cursor == 'BasicCursor'
+        :no_index
       when ns_scanned == n
         :perfect
       when ns_scanned > n
         :scanned_more_than_returned
-      when cursor == 'BasicCursor'
-        :no_index
       when scan_and_order
         :had_to_order
+      when n == 0
+        :no_docs_found
       else
         binding.pry
       end
