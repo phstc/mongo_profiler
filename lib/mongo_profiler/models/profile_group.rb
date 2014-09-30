@@ -5,7 +5,7 @@ module MongoProfiler
 
     field :name, type: String
 
-    has_many :profiles
+    has_many :profiles, dependent: :delete
 
     index name: 1
   end
