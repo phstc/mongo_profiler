@@ -21,5 +21,18 @@ module MongoProfiler
 
       erb :index
     end
+
+    get '/groups/:id' do
+      @group = MongoProfiler::ProfileGroup.find(params[:id])
+
+      erb :show
+    end
+
+     post '/clear' do
+       MongoProfiler::ProfileGroup.delete_all
+       MongoProfiler::Profile.delete_all
+
+      redirect to('/')
+    end
   end
 end

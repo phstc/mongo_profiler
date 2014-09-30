@@ -36,11 +36,16 @@
             <li><a href="<%= root_path %>">Dashboard</a></li>
           </ul>
           -->
+
+        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-left" role="search">
+          <button class="btn btn-danger">Clear History</button>
+        </form>
+
         </div><!--/.nav-collapse -->
       </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="starter-template">
         <% if @error_alert %>
           <div class="alert alert-danger alert-dismissable">

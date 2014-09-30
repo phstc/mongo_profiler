@@ -18,10 +18,28 @@ module MongoProfiler
 
     def score
       explain = JSON.parse(self.explain)
-      return 'No index' if explain['cursor'] == 'BasicCursor'
-      return 'No docs found' if explain['n'] == 0
-      (explain['nscannedObjects'] * 100) / explain['n']
+
+      n              = explain['n']
+      ns_scanned     = explain['nscanned']
+      cursor         = explain['cursor']
+      scan_and_order = explain['scanAndOrder']
+
+      case
+      when n == 0
+        :no_docs_found
+      when ns_scanned == n
+        :perfect
+      when ns_scanned > n
+        :scanned_more_than_returned
+      when cursor == 'BasicCursor'
+        :no_index
+      when scan_and_order
+        :had_to_order
+      else
+        binding.pry
+      end
     rescue => e
+      binding.pry
       e.message
     end
 
@@ -37,7 +55,7 @@ module MongoProfiler
         group_name = Thread.current['mongo_profiler_group_name'] || 'Undefined group name'
         group_id = Digest::MD5.hexdigest(group_name)
 
-        group = ProfileGroup.find_or_create_by(id: group_name, name: group_name)
+        group = ProfileGroup.find_or_create_by(id: group_id, name: group_name)
 
         group.touch
 
