@@ -6,11 +6,11 @@
 
 Database profiling tools are awesome and always useful. I love [Mongo profiling](http://docs.mongodb.org/manual/tutorial/manage-the-database-profiler/). But unfortunately these tools don't match the queries with the source code they are profiling, making hard to find where the slow queries are executed.
 
-The Mongo Profiler is a <del>refinement</del> patch in the [mongo-ruby-driver](https://github.com/mongodb/mongo-ruby-driver) to log all executed queries and their respective callers ([Ruby backtrace](http://www.ruby-doc.org/core-2.1.1/Kernel.html#method-i-caller)) in a [capped collections](http://docs.mongodb.org/manual/core/capped-collections/).
+The Mongo Profiler is a <del>refinement</del> patch in the [moped driver](https://github.com/mongoid/moped) to log all executed queries and their respective callers ([Ruby backtrace](http://www.ruby-doc.org/core-2.1.1/Kernel.html#method-i-caller)).
 
 It isn't replacement for the Mongo's built-in profiling, it is just a complementary tool to profile the queries with their respective source code.
 
-An interesting feature in the Mongo Profiler is that we can group queries by "life cycles". For example, in a web application it can be the `request_id`, so you will be able to see how many queries, how long did they take, the explain plans etc for each request.
+An interesting feature in the Mongo Profiler is that we can group queries by "life cycles". For example, in a web application it can be the `request.uuid` or the `request.url`, so you will be able to see how many queries, how long did they take, the explain plans etc for each request or url.
 
 ## Sample App
 
@@ -46,105 +46,51 @@ gem 'sinatra', require: nil
 
 ### Rails application
 
-#### Mongo Profiler initializer
+### Gemfile
 
-```ruby
-# config/initializers/mongo_profiler_setup.rb
-
-require 'mongo_profiler'
-require 'mongo_profiler/extensions/mongo/cursor'
-
-MongoProfiler.setup_database(MY_DATABASE_CONNECTION)
-# or
-# MongoProfiler.connect('localhost', 27017, 'my_database')
-
-MongoProfiler.application_name = 'my_application'
-
-# To enable Statsd
-# MongoProfiler.stats_client = MyStatsdClientInstance
-
-# To show graphite graphs
-# MongoProfiler.graphite_url = 'http://my_graphite'
+```
+gem 'mongo_profiler', github: 'phstc/mongo_profiler', require: nil
+gem 'sinatra', require: nil
 ```
 
-#### ApplicationController setup
+#### application_controller.rb
 
 ```ruby
 # app/controllers/application_controller.rb
 
 class ApplicationController < ActionController::Base
-  before_filter :mongo_profiler_setup
+  before_filter :set_mongo_profile_group_name
 
-  private
-
-  def mongo_profiler_setup
-    # aggregate queries by request
-    MongoProfiler.group_id = "request-#{request.uuid}"
-
-    # to show the request url
-    MongoProfiler.extra_attrs[:request_url]  = request.url
+  def set_mongo_profile_group_name
+    unless Rails.env.production?
+      require 'mongo_profiler'
+      Thread.current['mongo_profiler_group_name'] = request.url
+    end
   end
 end
 ```
 
-#### Dashboard app
+#### routes.rb
 
 ```ruby
 # config/routes.rb
 
-require 'mongo_profiler/web'
-
 MyApplication::Application.routes.draw do
-  mount MongoProfiler::Web => '/mongo_profiler'
-
-  # Security with Devise
-  # authenticate :user do
-  #  mount MongoProfiler::Web => '/mongo_profiler'
-  # end
-  #
-  # authenticate :user, lambda { |u| u.admin? } do
-  #  mount MongoProfiler::Web => '/mongo_profiler'
-  # end
+  unless Rails.env.production?
+    require 'mongo_profiler'
+    require 'mongo_profiler/web'
+    mount MongoProfiler::Web => '/mongo_profiler'
+    # Security with Devise
+    # authenticate :user do
+    #  mount MongoProfiler::Web => '/mongo_profiler'
+    # end
+    #
+    # authenticate :user, lambda { |u| u.admin? } do
+    #  mount MongoProfiler::Web => '/mongo_profiler'
+    # end
+  end
 end
 ```
-## Standalone Dashboard
-
-You can mount the Dashboard outside your main application using [config.ru example](https://github.com/phstc/mongo_profiler/blob/master/config.ru).
-
-Then:
-
-```bash
-$ rackup
-```
-
-Make sure to connect to the same database your Mongo Profiler is connected to.
-
-### Screenshots
-
-#### Dashboard index
-
-![Dashboard Index](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_dashboard_index.png)
-
-#### Queries Group Index
-
-![Queries Group Index](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_group_details.png)
-
-#### Query details
-
-TODO: Show a Graphite/StatsD example.
-
-![Query Details](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_query_details.png)
-
-#### Query details (backtrace)
-
-![Query Details Backtrace](https://raw.github.com/phstc/mongo_profiler/master/assets/mongo_profiler_query_details_backtrace.png)
-
-
-## TODO
-
-* Support Mongoid
-* Background processing to recommend indexes
-* Show Graphite/Statsd example
 
 ## Contributing
 

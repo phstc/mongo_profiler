@@ -51,7 +51,7 @@ module MongoProfiler
         _caller = MongoProfiler::Caller.new(caller)
 
         # TODO Move group creation to ProfileGroup
-        group_name = Thread.current['mongo_profiler_group_name'] || 'Undefined group name'
+        group_name = MongoProfiler.current_group_name
         group_id = Digest::MD5.hexdigest(group_name)
 
         group = ProfileGroup.find_or_create_by(id: group_id, name: group_name)
