@@ -37,5 +37,18 @@ module MongoProfiler
       expect(MongoProfiler::ProfileGroup.count).to eq 1
       expect(MongoProfiler::Profile.count).to eq 2
     end
+
+    it 'uses supplied group name' do
+      MongoProfiler.current_group_name = 'Test'
+
+      test = TestModel.create(name: 'Pablo')
+
+      TestModel.where(name: 'Pablo').first
+
+      expect(MongoProfiler::ProfileGroup.count).to eq 1
+
+      group = MongoProfiler::ProfileGroup.first
+      expect(group.name).to eq 'Test'
+    end
   end
 end
