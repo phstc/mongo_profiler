@@ -1,27 +1,29 @@
 require 'bundler/setup'
 require 'pry-byebug'
+require 'database_cleaner'
+require 'mongo_profiler'
 
 Bundler.require(:default, :test)
 
-require_relative '../lib/mongo_profiler'
+ENV['MONGOID_ENV'] = 'test'
 
-# CONNECTION = Mongo::MongoClient.new
-# DB         = CONNECTION.db('mongo_profiler-database-test')
-# COLL       = DB['example-collection']
+Mongoid.load!(File.join(File.dirname(__FILE__), 'mongoid.yml'))
+
+class TestModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include Mongoid::Attributes::Dynamic
+end
 
 Dir['./spec/support/**/*.rb'].each &method(:require)
 
 RSpec.configure do |config|
   config.before do
-    # MongoProfiler.connect('localhost', 27017, 'mongo_profiler-database-test')
-
-    # creates capped collections
-    # MongoProfiler.create_collections
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.start
   end
 
   config.after do
-    # DB.collections.each do |collection|
-      # collection.drop unless collection.name.match(/^system\./)
-    # end
+    DatabaseCleaner.clean
   end
 end

@@ -13,11 +13,11 @@ module MongoProfiler
     field :file, type: String
     field :line, type: Integer
     field :method, type: String
-    field :selector_md5, type: String
+    field :profile_md5, type: String
 
     belongs_to :profile_group
 
-    index group_id: 1, selector_md5: 1
+    index group_id: 1, profile_md5: 1
 
     def score
       explain = JSON.parse(self.explain)
@@ -45,50 +45,59 @@ module MongoProfiler
 
     class << self
       def register(started_at, database, collection, selector, options = {})
-        return if collection =~ /mongo_profiler/
+        return if collection =~ /mongo_profiler/ || collection =~ /system/
         return if selector['$explain']
 
         _caller = MongoProfiler::Caller.new(caller)
 
-        # TODO Move group creation to ProfileGroup
-        group_name = MongoProfiler.current_group_name
-        group_id = Digest::MD5.hexdigest(group_name)
-
-        group = ProfileGroup.find_or_create_by(id: group_id, name: group_name)
+        group = ProfileGroup.find_or_create_by(name: MongoProfiler.current_group_name)
 
         group.touch
 
-        query = if selector.has_key?('$query')
-                  selector['$query']
-                else
-                  selector
-                end
+        profile_md5 = generate_profile_md5(database, collection, selector, _caller)
 
-        # TODO implement deep_keys
-        selector_md5_s = collection + query.keys.sort.join + _caller.file + _caller.line.to_s
-        selector_md5 = Digest::MD5.hexdigest(selector_md5_s)
-
-        return if Profile.where(selector_md5: selector_md5, profile_group_id: group_id).any?
+        return if Profile.where(profile_md5: profile_md5, profile_group_id: group.id).any?
 
         result = {}
-        result[:selector_md5]       = selector_md5
-        result[:profile_group_id]   = group_id
+        result[:profile_md5]        = profile_md5
+        result[:profile_group_id]   = group.id
 
         result[:total_time]         = elapsed(started_at)
         result[:command_database]   = database
         result[:command_collection] = collection
-        result[:command]            = JSON.dump(query)
+        result[:command]            = JSON.dump(selector)
         result[:file]               = _caller.file
         result[:line]               = _caller.line
         result[:method]             = _caller.method
 
         # TODO do it in background
-        result[:explain] = JSON.dump(self.collection.database[collection].find(query).explain)
+        result[:explain] = JSON.dump(generate_explain(collection, selector))
 
         self.create(result)
       end
 
       private
+
+      def generate_explain(collection, selector)
+        query = if selector.has_key?('$query')
+                  selector['$query']
+                else
+                  selector
+                end
+        self.collection.database[collection].find(query).explain
+      end
+
+      def generate_profile_md5(database, collection, selector, _caller)
+        profile_key = [
+          database,
+          collection,
+          MongoProfiler::Util.deep_keys(selector).join,
+          _caller.file,
+          _caller.line.to_s
+        ].join
+
+        Digest::MD5.hexdigest(profile_key)
+      end
 
       def elapsed(started_at)
         (Time.now - started_at) * 1000
