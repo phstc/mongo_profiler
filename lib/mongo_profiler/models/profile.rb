@@ -72,7 +72,7 @@ module MongoProfiler
 
         result = {}
         result[:selector_md5]       = selector_md5
-        result[:profile_group_id]   = group
+        result[:profile_group_id]   = group_id
 
         result[:total_time]         = elapsed(started_at)
         result[:command_database]   = database
