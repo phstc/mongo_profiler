@@ -38,11 +38,8 @@ module MongoProfiler
         :had_to_order
       when n == 0
         :no_docs_found
-      else
-        binding.pry
       end
     rescue => e
-      binding.pry
       e.message
     end
 
@@ -52,7 +49,6 @@ module MongoProfiler
         return if selector['$explain']
 
         _caller = MongoProfiler::Caller.new(caller)
-
 
         # TODO Move group creation to ProfileGroup
         group_name = Thread.current['mongo_profiler_group_name'] || 'Undefined group name'
@@ -69,14 +65,14 @@ module MongoProfiler
                 end
 
         # TODO implement deep_keys
-        selector_md5 = collection + query.keys.sort.join + _caller.file + _caller.line.to_s
-        selector_md5 = Digest::MD5.hexdigest(selector_md5)
+        selector_md5_s = collection + query.keys.sort.join + _caller.file + _caller.line.to_s
+        selector_md5 = Digest::MD5.hexdigest(selector_md5_s)
 
-        return if Profile.where(selector_md5: selector_md5, group_id: group_id).any?
+        return if Profile.where(selector_md5: selector_md5, profile_group_id: group_id).any?
 
         result = {}
         result[:selector_md5]       = selector_md5
-        result[:profile_group]      = group
+        result[:profile_group_id]   = group
 
         result[:total_time]         = elapsed(started_at)
         result[:command_database]   = database
