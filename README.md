@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
   def set_mongo_profile_group_name
     unless Rails.env.production?
       require 'mongo_profiler'
-      Thread.current['mongo_profiler_group_name'] = request.url
+      MongoProfiler.current_group_name = request.url
     end
   end
 end
