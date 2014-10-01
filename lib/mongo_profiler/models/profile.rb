@@ -30,14 +30,14 @@ module MongoProfiler
       case
       when cursor == 'BasicCursor'
         :no_index
+      when n == 0 && nscanned == 0
+        :no_docs_found
       when ns_scanned == n
         :perfect
       when ns_scanned > n
         :scanned_more_than_returned
       when scan_and_order
         :had_to_order
-      when n == 0
-        :no_docs_found
       end
     rescue => e
       e.message
