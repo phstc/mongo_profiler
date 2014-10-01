@@ -7,22 +7,28 @@ module MongoProfiler
 
       expect(TestModel.where(name: 'Pablo').first.name).to eq 'Pablo'
 
-
       expect(MongoProfiler::ProfileGroup.count).to eq 1
 
       group = MongoProfiler::ProfileGroup.first
       expect(group.name).to eq 'Undefined group name'
 
       expect(MongoProfiler::Profile.count).to eq 1
-      # TODO check all the stuff
-      expect(MongoProfiler::Profile.first.attributes).to include('profile_group_id' => group.id)
+
+      profile = MongoProfiler::Profile.first
+
+      expect(profile.attributes).to include('profile_group_id' => group.id,
+                                            'file' => __FILE__,
+                                            'command_database' => 'mongo_profiler_test',
+                                            'command_collection' => 'test_models')
+
+      expect(JSON.parse(profile.command)).to eq('$query' => { 'name' => 'Pablo' }, '$orderby' => { '_id' => 1 })
     end
 
     it 'does not duplicate profiles' do
       test = TestModel.create
 
-      TestModel.where(name: 'Pablo').first
-      TestModel.where(name: 'Pablo').first
+      # To guarantee the same line number
+      TestModel.where(name: 'Pablo').first || TestModel.where(name: 'Pablo').first
 
       expect(MongoProfiler::ProfileGroup.count).to eq 1
       expect(MongoProfiler::Profile.count).to eq 1

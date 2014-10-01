@@ -18,7 +18,7 @@ module MongoProfiler
     def project_callers
       # skip gem/bundle entries
       @project_callers ||= _caller.reject do |entry|
-        entry.include?('bundle/ruby') || entry.include?('gem/ruby') || entry.include?('rubies/ruby') || (entry.include?('mongo_profiler') && ENV['MONGOID_ENV'] != 'test')
+        entry.include?('bundle/ruby') || entry.include?('gem/ruby') || entry.include?('rubies/ruby') || entry.include?('extensions/moped.rb')
       end
     end
   end
