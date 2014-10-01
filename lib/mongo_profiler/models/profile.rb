@@ -30,7 +30,7 @@ module MongoProfiler
       case
       when cursor == 'BasicCursor'
         :no_index
-      when n == 0 && nscanned == 0
+      when n == 0
         :no_docs_found
       when ns_scanned == n
         :perfect
