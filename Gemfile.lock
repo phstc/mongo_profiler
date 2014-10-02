@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mongo_profiler (0.0.1)
+    mongo_profiler (0.0.2)
       activesupport
 
 GEM
