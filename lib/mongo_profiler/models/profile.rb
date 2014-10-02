@@ -17,7 +17,7 @@ module MongoProfiler
 
     belongs_to :profile_group
 
-    index group_id: 1, profile_md5: 1
+    index profile_group_id: 1, profile_md5: 1
 
     def score
       explain = JSON.parse(self.explain)
@@ -56,7 +56,7 @@ module MongoProfiler
 
         profile_md5 = generate_profile_md5(database, collection, selector, _caller)
 
-        return if Profile.where(profile_md5: profile_md5, profile_group_id: group.id).any?
+        return if Profile.where(profile_group_id: group.id, profile_md5: profile_md5).any?
 
         result = {}
         result[:profile_md5]        = profile_md5
