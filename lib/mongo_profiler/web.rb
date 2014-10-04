@@ -15,17 +15,24 @@ module MongoProfiler
 
     helpers WebHelpers
 
+    def load_collection_names
+      @collection_names = MongoProfiler::Profile.command_collection_names
+    end
 
     get '/' do
+      load_collection_names
+
       @groups = MongoProfiler::ProfileGroup.order(:updated_at.desc)
 
-      erb :index
+      erb :groups
     end
 
     get '/groups/:id' do
+      load_collection_names
+
       @group = MongoProfiler::ProfileGroup.find(params[:id])
 
-      erb :show
+      erb :group
     end
 
     post '/clear' do
@@ -36,13 +43,15 @@ module MongoProfiler
     end
 
     get '/profiles' do
+      load_collection_names
+
       @collection_name = params[:collection]
 
       profile_md5s = MongoProfiler::Profile.where(command_collection: @collection_name).distinct(:profile_md5)
 
       @profiles = MongoProfiler::Profile.in(profile_md5: profile_md5s)
 
-      erb :search
+      erb :profiles
     end
 
     get '/search' do

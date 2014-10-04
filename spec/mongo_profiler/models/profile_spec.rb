@@ -2,6 +2,14 @@ require 'spec_helper'
 
 module MongoProfiler
   describe Caller do
+    describe '.command_collection_names' do
+      it 'returns collection names' do
+        TestModel.first
+
+        expect(MongoProfiler::Profile.command_collection_names).to eq(['test_models'])
+      end
+    end
+
     describe '#command_order_by_keys' do
       it 'returns order_by' do
         TestModel.order_by(:name.asc).first

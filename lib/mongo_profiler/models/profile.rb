@@ -102,6 +102,10 @@ module MongoProfiler
         self.create(result)
       end
 
+      def command_collection_names
+        distinct(:command_collection)
+      end
+
       private
 
       def generate_explain(collection, selector)

@@ -37,17 +37,22 @@
           </ul>
           -->
 
-        <form action="<%= root_path %>profiles" class="navbar-form navbar-right">
-          <div class="form-group">
-            <input type="text" class="form-control" name="collection" placeholder="collection name" value="<%= @collection_name %>">
-          </div>
-          <button type="submit" class="btn btn-default">Search</button>
+
+        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-right">
+          <button class="btn btn-danger" title="Clear All History">Clear All History</button>
 
           <a href="https://github.com/phstc/mongo_profiler">Fork me on GitHub</a>
         </form>
 
-        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-right">
-          <button class="btn btn-danger">Clear History</button>
+        <form action="<%= root_path %>profiles" class="navbar-form navbar-right">
+          <div class="form-group">
+            <select name="collection" class="form-control" title="Filter by collection" onchange="if(this.value !== '') this.form.submit()">
+              <option value="">- collections -</option>
+              <% @collection_names.each do |name| %>
+                <option <%= 'selected' if @collection_name == name %>><%= name %></option>
+              <% end %>
+            </select>
+          </div>
         </form>
 
         </div><!--/.nav-collapse -->
