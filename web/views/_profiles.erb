@@ -11,13 +11,13 @@
       <tbody>
         <% profiles.sort_by(&:total_time).reverse.each do |profile| %>
           <tr>
-            <td><%= profile['total_time'] %></td>
+            <td><%= profile.total_time %></td>
             <td><%= profile.score %></td>
-            <td><%= "#{profile['file'].split('/').last}:#{profile['line']}" %></td>
-            <td><%= profile['command_database'] %></td>
-            <td><%= profile['command_collection'] %></td>
-            <td><pre style="width: 300px" title="Click to toggle"><code><%= profile['command'] %></code></pre></td>
-            <td><pre style="width: 300px" title="Click to toggle"><code><%= profile['explain'] %></code></pre></td>
+            <td title="<%= profiel.full_file_reference %>"><%= profile.file_reference %></td>
+            <td><%= profile.command_database %></td>
+            <td><%= profile.command_collection %></td>
+            <td><pre style="width: 300px" title="Click to toggle"><code><%= profile.command %></code></pre></td>
+            <td><pre style="width: 300px" title="Click to toggle"><code><%= profile.explain %></code></pre></td>
           </tr>
         <% end %>
       </tbody>

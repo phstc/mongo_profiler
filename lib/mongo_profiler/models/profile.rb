@@ -43,6 +43,14 @@ module MongoProfiler
       e.message
     end
 
+    def file_reference
+      "#{file.split('/').last}:#{line}"
+    end
+
+    def full_file_reference
+      "#{file}:#{line}"
+    end
+
     class << self
       def register(started_at, database, collection, selector, options = {})
         return if collection =~ /mongo_profiler/ || collection =~ /system/
