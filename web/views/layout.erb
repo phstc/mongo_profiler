@@ -37,7 +37,7 @@
           </ul>
           -->
 
-        <form action="<%= root_path %>search" class="navbar-form navbar-right" role="search">
+        <form action="<%= root_path %>profiles" class="navbar-form navbar-right">
           <div class="form-group">
             <input type="text" class="form-control" name="collection" placeholder="collection name" value="<%= @collection_name %>">
           </div>
@@ -46,7 +46,7 @@
           <a href="https://github.com/phstc/mongo_profiler">Fork me on GitHub</a>
         </form>
 
-        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-right" role="search">
+        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-right">
           <button class="btn btn-danger">Clear History</button>
         </form>
 

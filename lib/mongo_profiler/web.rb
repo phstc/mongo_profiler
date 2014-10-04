@@ -35,7 +35,7 @@ module MongoProfiler
       redirect to('/')
     end
 
-    get '/search' do
+    get '/profiles' do
       @collection_name = params[:collection]
 
       profile_md5s = MongoProfiler::Profile.where(command_collection: @collection_name).distinct(:profile_md5)
@@ -43,6 +43,10 @@ module MongoProfiler
       @profiles = MongoProfiler::Profile.in(profile_md5: profile_md5s)
 
       erb :search
+    end
+
+    get '/search' do
+      redirect to("/profiles?collection=#{params[:collection]}")
     end
   end
 end
