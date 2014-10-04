@@ -2,6 +2,38 @@ require 'spec_helper'
 
 module MongoProfiler
   describe Caller do
+    describe '#command_order_by_keys' do
+      it 'returns order_by' do
+        TestModel.order_by(:name.asc).first
+
+        profile = MongoProfiler::Profile.last
+        expect(profile.command_order_by_keys).to eq %w[name]
+      end
+
+      it 'returns order_by without query by' do
+        TestModel.where(name: 'Pablo', last_name: 'Cantero').order_by(:name.asc, :last_name.desc).first
+
+        profile = MongoProfiler::Profile.last
+        expect(profile.command_order_by_keys).to eq %w[name last_name]
+      end
+    end
+
+    describe '#command_query_keys' do
+      it 'returns query' do
+        TestModel.where(name: 'Pablo', last_name: 'Cantero').and.gt(test1: 1).or(test2: /a/).first
+
+        profile = MongoProfiler::Profile.last
+        expect(profile.command_query_keys).to eq %w[name last_name test1 test2]
+      end
+
+      it 'returns query without order by' do
+        TestModel.where(name: 'Pablo', last_name: 'Cantero').order(:_name.asc).first
+
+        profile = MongoProfiler::Profile.last
+        expect(profile.command_query_keys).to eq %w[name last_name]
+      end
+    end
+
     describe '#file_reference' do
       it 'returns the file reference' do
         TestModel.where(name: 'Pablo').first

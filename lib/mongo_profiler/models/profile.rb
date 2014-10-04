@@ -39,8 +39,6 @@ module MongoProfiler
       when scan_and_order
         :had_to_order
       end
-    rescue => e
-      e.message
     end
 
     def file_reference
@@ -49,6 +47,19 @@ module MongoProfiler
 
     def full_file_reference
       "#{file}:#{line}"
+    end
+
+    def command_order_by_keys
+      selector = JSON.parse(command)
+
+      MongoProfiler::Util.deep_keys(selector['$orderby'])
+    end
+
+    def command_query_keys
+      selector = JSON.parse(command)
+      hash = selector.include?('$query') ? selector['$query'] : selector
+
+      MongoProfiler::Util.deep_keys(hash).reject { |k| k.starts_with? '$' }
     end
 
     class << self
@@ -87,12 +98,7 @@ module MongoProfiler
       private
 
       def generate_explain(collection, selector)
-        query = if selector.has_key?('$query')
-                  selector['$query']
-                else
-                  selector
-                end
-        self.collection.database[collection].find(query).explain
+        self.collection.database[collection].find(selector).explain
       end
 
       def generate_profile_md5(database, collection, selector, _caller)
