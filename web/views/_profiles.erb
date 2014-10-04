@@ -5,6 +5,8 @@
       <th>File Name</th>
       <th>Database</th>
       <th>Collection</th>
+      <th>Query keys</th>
+      <th>Sort keys</th>
       <th>Command</th>
       <th>Explain</th>
     </thead>
@@ -13,9 +15,11 @@
           <tr>
             <td><%= profile.total_time %></td>
             <td><%= profile.score %></td>
-            <td title="<%= profiel.full_file_reference %>"><%= profile.file_reference %></td>
+            <td title="<%= profile.full_file_reference %>"><%= profile.file_reference %></td>
             <td><%= profile.command_database %></td>
             <td><%= profile.command_collection %></td>
+            <td><%= profile.command_query_keys.join(',&nbsp;') %></td>
+            <td><%= profile.command_order_by_keys.join(',&nbsp;') %></td>
             <td><pre style="width: 300px" title="Click to toggle"><code><%= profile.command %></code></pre></td>
             <td><pre style="width: 300px" title="Click to toggle"><code><%= profile.explain %></code></pre></td>
           </tr>

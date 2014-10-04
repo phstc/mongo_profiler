@@ -52,14 +52,21 @@ module MongoProfiler
     def command_order_by_keys
       selector = JSON.parse(command)
 
-      MongoProfiler::Util.deep_keys(selector['$orderby'])
+      selector['$orderby'].to_a.map do |k, v|
+
+        if v == 1
+          "#{k}.asc"
+        else
+          "#{k}.desc"
+        end
+      end
     end
 
     def command_query_keys
       selector = JSON.parse(command)
       hash = selector.include?('$query') ? selector['$query'] : selector
 
-      MongoProfiler::Util.deep_keys(hash).reject { |k| k.starts_with? '$' }
+      MongoProfiler::Util.deep_keys(hash).reject { |k| k.starts_with? '$' }.uniq.to_a
     end
 
     class << self

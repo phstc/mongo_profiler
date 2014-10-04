@@ -7,14 +7,14 @@ module MongoProfiler
         TestModel.order_by(:name.asc).first
 
         profile = MongoProfiler::Profile.last
-        expect(profile.command_order_by_keys).to eq %w[name]
+        expect(profile.command_order_by_keys).to eq ['name.asc']
       end
 
       it 'returns order_by without query by' do
         TestModel.where(name: 'Pablo', last_name: 'Cantero').order_by(:name.asc, :last_name.desc).first
 
         profile = MongoProfiler::Profile.last
-        expect(profile.command_order_by_keys).to eq %w[name last_name]
+        expect(profile.command_order_by_keys).to eq %w[name.asc last_name.desc]
       end
     end
 
