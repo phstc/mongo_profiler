@@ -1,4 +1,4 @@
-<h2 class="page-header">Profile Groups  <%= @group.name %></h2>
+<h2 class="page-header">Profile search  <%= @collection_name %></h2>
 
 <style>
   tr, td, pre
@@ -23,6 +23,5 @@ $(function(){
 </script>
 
 <div class="row">
-  <%= erb :_groups, {}, { groups: [@group] } %>
-  <%= erb :_profiles, {}, { profiles: @group.profiles } %>
+  <%= erb :_profiles, {}, { profiles: @profiles } %>
 </div>

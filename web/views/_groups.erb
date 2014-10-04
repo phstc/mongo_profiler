@@ -1,0 +1,32 @@
+<table class="table table-bordered table-striped">
+  <thead>
+    <th>Group name</th>
+    <th>Total time ms</th>
+    <th>AVG time ms</th>
+    <th>Min time ms</th>
+    <th>Max time ms</th>
+    <th>Queries</th>
+    <th>perfect</th>
+    <th>had_to_order</th>
+    <th>scanned_more_than_returned</th>
+    <th>no_index</th>
+    <th>no_docs_found</th>
+  </thead>
+    <tbody class="header">
+      <% groups.each do |group| %>
+        <tr>
+          <td><a href="<%= root_path %>groups/<%= group.id %>"><%= group.name %></a></td>
+          <td><%= group.total_time %></td>
+          <td><%= group.avg_time %></td>
+          <td><%= group.min_time %></td>
+          <td><%= group.max_time %></td>
+          <td><%= group.profiles.count %></td>
+          <td><%= group.count_by_score :perfect %></td>
+          <td><%= group.count_by_score :had_to_order %></td>
+          <td><%= group.count_by_score :scanned_more_than_returned %></td>
+          <td><%= group.count_by_score :no_index %></td>
+          <td><%= group.count_by_score :no_docs_found %></td>
+        </tr>
+      <% end %>
+  </tbody>
+</table>

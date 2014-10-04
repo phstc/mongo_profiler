@@ -1,4 +1,4 @@
-# https://github.com/mperham/sidekiq/wiki/Monitoring
+# https://github.om/mperham/sidekiq/wiki/Monitoring
 require 'erb'
 require 'yaml'
 require 'sinatra/base'
@@ -28,11 +28,21 @@ module MongoProfiler
       erb :show
     end
 
-     post '/clear' do
-       MongoProfiler::ProfileGroup.delete_all
-       MongoProfiler::Profile.delete_all
+    post '/clear' do
+      MongoProfiler::ProfileGroup.delete_all
+      MongoProfiler::Profile.delete_all
 
       redirect to('/')
+    end
+
+    get '/search' do
+      @collection_name = params[:collection]
+
+      profile_md5s = MongoProfiler::Profile.where(command_collection: @collection_name).distinct(:profile_md5)
+
+      @profiles = MongoProfiler::Profile.in(profile_md5: profile_md5s)
+
+      erb :search
     end
   end
 end

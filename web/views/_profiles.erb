@@ -1,0 +1,24 @@
+  <table class="table table-bordered table-striped">
+    <thead class="header">
+      <th>Total Time ms</th>
+      <th>Query score</th>
+      <th>File Name</th>
+      <th>Database</th>
+      <th>Collection</th>
+      <th>Command</th>
+      <th>Explain</th>
+    </thead>
+      <tbody>
+        <% profiles.sort_by(&:total_time).reverse.each do |profile| %>
+          <tr>
+            <td><%= profile['total_time'] %></td>
+            <td><%= profile.score %></td>
+            <td><%= "#{profile['file'].split('/').last}:#{profile['line']}" %></td>
+            <td><%= profile['command_database'] %></td>
+            <td><%= profile['command_collection'] %></td>
+            <td><pre style="width: 300px" title="Click to toggle"><code><%= profile['command'] %></code></pre></td>
+            <td><pre style="width: 300px" title="Click to toggle"><code><%= profile['explain'] %></code></pre></td>
+          </tr>
+        <% end %>
+      </tbody>
+  </table>

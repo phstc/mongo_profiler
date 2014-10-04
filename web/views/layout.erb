@@ -37,7 +37,14 @@
           </ul>
           -->
 
-        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-left" role="search">
+        <form action="<%= root_path %>search" class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" name="collection" placeholder="collection name" value="<%= @collection_name %>">
+          </div>
+          <button type="submit" class="btn btn-default">Search</button>
+        </form>
+
+        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-right" role="search">
           <button class="btn btn-danger">Clear History</button>
         </form>
 
