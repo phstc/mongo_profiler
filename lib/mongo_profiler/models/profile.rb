@@ -103,7 +103,7 @@ module MongoProfiler
       end
 
       def command_collection_names
-        distinct(:command_collection)
+        distinct(:command_collection).sort
       end
 
       private
