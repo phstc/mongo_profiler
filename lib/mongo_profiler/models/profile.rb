@@ -74,6 +74,8 @@ module MongoProfiler
         return if collection =~ /mongo_profiler/ || collection =~ /system/
         return if selector['$explain']
 
+        total_time = elapsed(started_at)
+
         _caller = MongoProfiler::Caller.new(caller)
 
         group = ProfileGroup.find_or_create_by(name: MongoProfiler.current_group_name)
@@ -88,7 +90,7 @@ module MongoProfiler
         result[:profile_md5]        = profile_md5
         result[:profile_group_id]   = group.id
 
-        result[:total_time]         = elapsed(started_at)
+        result[:total_time]         = total_time
         result[:command_database]   = database
         result[:command_collection] = collection
         result[:command]            = JSON.dump(selector)
