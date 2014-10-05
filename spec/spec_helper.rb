@@ -15,6 +15,12 @@ class TestModel
   include Mongoid::Attributes::Dynamic
 end
 
+class TestSuperModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include Mongoid::Attributes::Dynamic
+end
+
 Dir['./spec/support/**/*.rb'].each &method(:require)
 
 RSpec.configure do |config|

@@ -5,8 +5,11 @@ module MongoProfiler
     describe '.command_collection_names' do
       it 'returns collection names' do
         TestModel.first
+        TestModel.last
 
-        expect(MongoProfiler::Profile.command_collection_names).to eq(['test_models'])
+        TestSuperModel.first
+
+        expect(MongoProfiler::Profile.command_collection_names).to eq([{ '_id' => 'test_models', 'value' => 2.0 }, { '_id' => 'test_super_models', 'value' => 1.0 }])
       end
     end
 

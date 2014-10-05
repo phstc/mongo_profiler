@@ -103,7 +103,26 @@ module MongoProfiler
       end
 
       def command_collection_names
-        distinct(:command_collection).sort
+        map = %Q{
+          function() {
+            emit(this.command_collection, 1);
+          }
+        }
+
+        reduce = %Q{
+          function(key, values) {
+            var result = 0;
+            values.forEach(function(value) {
+              result += value;
+            });
+            return result;
+          }
+        }
+
+        names = map_reduce(map, reduce).out(inline: true)
+        names.sort_by do |n|
+          n['_id']
+        end
       end
 
       private

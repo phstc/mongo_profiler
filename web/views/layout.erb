@@ -49,7 +49,7 @@
             <select name="collection" class="form-control" title="Filter by collection" onchange="if(this.value !== '') { this.form.submit() } else { window.location.href = '<%= root_path %>' }">
               <option value="">- collections -</option>
               <% @collection_names.each do |name| %>
-                <option <%= 'selected' if @collection_name == name %>><%= name %></option>
+                <option value="<%= name['_id'] %>" <%= 'selected' if @collection_name == name['_id'] %>><%= "#{name['_id']} (#{name['value'].to_i})" %></option>
               <% end %>
             </select>
           </div>
