@@ -38,7 +38,7 @@
           -->
 
 
-        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-right">
+        <form action="<%= root_path %>clear" method="post" class="navbar-form navbar-right" onsubmit="return confirm('All groups and profiles will be removed. This action cannot be undone. Are you sure?');">
           <button class="btn btn-danger" title="Clear All History">Clear All History</button>
 
           <a href="https://github.com/phstc/mongo_profiler">Fork me on GitHub</a>
