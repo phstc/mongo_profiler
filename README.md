@@ -59,11 +59,10 @@ gem 'sinatra', require: nil
 # app/controllers/application_controller.rb
 
 class ApplicationController < ActionController::Base
-  before_filter :set_mongo_profile_group_name, unless: -> { Rails.env.production? }
 
-  def set_mongo_profile_group_name
+  before_filter unless: -> { Rails.env.production? } do |controller|
     require 'mongo_profiler'
-    MongoProfiler.current_group_name = request.url
+    Thread.current['mongo_profiler_group_name'] = request.url
   end
 end
 ```
