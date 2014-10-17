@@ -130,7 +130,14 @@ module MongoProfiler
       private
 
       def generate_explain(collection, selector)
-        self.collection.database[collection].find(selector).explain
+        # https://jira.mongodb.org/browse/SERVER-14091
+        s = if selector.has_key? '$query'
+              selector
+            else
+              { '$query' => selector }
+            end.merge('$explain' => true)
+
+        self.collection.database[collection].find(s).first
       end
 
       def generate_profile_md5(database, collection, selector, _caller)

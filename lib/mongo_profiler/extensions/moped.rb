@@ -9,7 +9,7 @@ Moped::Node.class_eval do
     begin
       MongoProfiler::Profile.register(started_at, database, collection, selector, options)
     rescue => e
-      p "MongoProfiler: #{e.message}"
+      p "MongoProfiler ERROR: #{e.message}\ncollection: #{collection}\nselector: #{selector}\noptions: #{options}"
     end
 
     result
