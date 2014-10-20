@@ -121,10 +121,10 @@ module MongoProfiler
           }
         }
 
-        names = map_reduce(map, reduce).out(inline: true)
-        names.sort_by do |n|
-          n['_id']
-        end
+        map_reduce(map, reduce).out(inline: true).sort_by { |n| n['_id'] }
+      rescue Moped::Errors::OperationFailure => e
+        # happen when the mongo_profiler collection wasn't created yet
+        []
       end
 
       private
@@ -137,7 +137,8 @@ module MongoProfiler
               { '$query' => selector }
             end.merge('$explain' => true)
 
-        self.collection.database[collection].find(s).first
+        # MUST BE `.entries.first` if `.first` only, it limits the result to 1 `n: 1`
+        self.collection.database[collection].find(s).entries.first
       end
 
       def generate_profile_md5(database, collection, selector, _caller)

@@ -84,6 +84,8 @@ module MongoProfiler
                                               'command_collection' => 'test_models')
 
         expect(JSON.parse(profile.command)).to eq('$query' => { 'name' => 'Pablo' }, '$orderby' => { '_id' => 1 })
+
+        expect(profile.score).to eq :perfect
       end
 
       it 'does not duplicate profiles' do
