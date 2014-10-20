@@ -8,20 +8,6 @@
   }
 </style>
 
-<script>
-$(function(){
-    $('tr pre').click(function(){
-       var height = '400px';
-
-      if($(this).height() > 300){
-        height = '60px';
-      }
-
-      $(this).animate({ 'height': height, 'max-height': height });
-    })
-});
-</script>
-
 <div class="row">
   <%= erb :_profiles, {}, { profiles: @profiles } %>
 </div>

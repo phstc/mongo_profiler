@@ -42,6 +42,20 @@ module MongoProfiler
       redirect to('/')
     end
 
+    post '/clear_profile/:id' do
+      profile = MongoProfiler::Profile.find(params[:id])
+      profile_group_id = profile.profile_group_id
+
+      profile.delete
+
+      if MongoProfiler::Profile.where(profile_group_id: profile_group_id).limit(1).count(true) > 0
+        redirect to("/groups/#{profile_group_id}")
+      else
+        MongoProfiler::ProfileGroup.find(id: profile_group_id).delete
+        redirect to('/')
+      end
+    end
+
     get '/profiles' do
       load_collection_names
 

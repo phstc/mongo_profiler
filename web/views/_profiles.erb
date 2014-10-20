@@ -9,6 +9,7 @@
       <th>Sort keys</th>
       <th>Command</th>
       <th>Explain</th>
+      <th></th>
     </thead>
       <tbody>
         <% profiles.sort_by(&:total_time).reverse.each do |profile| %>
@@ -22,6 +23,12 @@
             <td><%= profile.command_order_by_keys.join(',&nbsp;') %></td>
             <td><pre style="width: 300px" title="Click to toggle"><code><%= profile.command %></code></pre></td>
             <td><pre style="width: 300px" title="Click to toggle"><code><%= profile.explain %></code></pre></td>
+            <td>
+              <a class="toggle_profile" href="#" style="text-decoration: none;">&#8597;</a>
+              <form action="<%= root_path %>clear_profile/<%= profile.id %>" method="post" class="navbar-form navbar-right" onsubmit="return confirm('This action cannot be undone. Are you sure?');">
+                <button class="btn btn-danger" title="Remove">Remove</button>
+              </form>
+            </td>
           </tr>
         <% end %>
       </tbody>
